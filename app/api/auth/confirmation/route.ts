@@ -18,7 +18,6 @@ export async function POST(request: Request) {
         },
       },
     });
-
     if (!user || !user?.resetTokenExpiry) {
       return NextResponse.json("Token invalid or expired", { status: 404 });
     }

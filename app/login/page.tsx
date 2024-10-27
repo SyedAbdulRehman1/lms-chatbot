@@ -71,7 +71,6 @@ export default function Login() {
     }),
     onSubmit: async (values) => {
       try {
-        console.log(values, "dfdfd");
         const resp = await signin(values, (field: any, error: any) => {
           signInFormik.setFieldError(field, error.message); // Set form field errors dynamically
         });

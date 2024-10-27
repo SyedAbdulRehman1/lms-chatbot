@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getSession, signIn } from "next-auth/react";
 import { FieldValues } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 // import { useDispatch } from "react-redux";
 
 import { Method, makeRequest } from "@/app/utils/fetch";
@@ -43,7 +43,9 @@ export const useAuth = (errorCb?: ErrorCb) => {
       const data = await makeRequest("/api/auth/confirmation", Method.POST, {
         token,
       });
+      console.log(data, "data");
       setLoading(false);
+      redirect("/login");
       return data;
     } catch (error) {
       setLoading(false);

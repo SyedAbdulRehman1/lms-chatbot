@@ -36,12 +36,13 @@ export async function POST(request: Request) {
       new Date().getTime() + 30 * 24 * 60 * 60000
     ); // 60000 milliseconds in a minute
 
+    console.log(token, "tokeeen");
     await prisma.user.create({
       data: {
         email,
         name: fullName,
         password: hashedPassword,
-        refreshToken: token,
+        resetToken: token,
         resetTokenExpiry: tokenExpiration,
       },
     });
