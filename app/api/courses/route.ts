@@ -1,9 +1,10 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { isTeacher } from "@/lib/teacher";
+// import { UseIsTeacher } from "@/lib/teacher";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
+// import { isUserType } from "@/lib/auth";
 
 export async function GET(req: Request) {
   try {
@@ -35,10 +36,10 @@ export async function POST(req: Request) {
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
+    const IsTeacher = session?.user.type === "TEACHER";
     const userId = session.user.id;
 
-    if (!userId || !isTeacher()) {
+    if (!userId || !IsTeacher) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 

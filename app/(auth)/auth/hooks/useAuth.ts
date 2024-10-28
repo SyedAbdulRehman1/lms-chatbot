@@ -8,6 +8,7 @@ import { Method, makeRequest } from "@/app/utils/fetch";
 import { setLoggedInUserData } from "@/app/store/userSlice";
 import { useDispatch } from "react-redux";
 import { message } from "antd";
+import { ApiResponse } from "@/app/Interface/ApiResponse";
 // import { useDispatch } from "react-redux";
 // import { setLoggedInUserData } from "@/app/store/userSlice";
 // import { encodeToken } from '@/app/utils/jwtService';
@@ -79,12 +80,17 @@ export const useAuth = (errorCb?: ErrorCb) => {
   const register = async (data: FieldValues) => {
     setLoading(true);
     try {
-      const res = await makeRequest("/api/auth/register", Method.POST, data);
+      const res = await makeRequest<ApiResponse<any>>(
+        "/api/auth/register",
+        Method.POST,
+        data
+      );
       setLoading(false);
+      console.log(res, "resssssssssss");
       return res;
     } catch (error) {
       setLoading(false);
-      throw error;
+      throw error; // You can handle error formatting here if needed
     }
   };
 
@@ -144,14 +150,33 @@ export const useAuth = (errorCb?: ErrorCb) => {
         ...data,
         redirect: false,
       });
-
+      console.log(result, "reeddf");
       if (result?.error) {
-        if (result.error === "email") {
-          message.error("The provided credentials do not match our records.");
-        } else if (result.error === "user_not_found") {
-          message.error("User not found. Please check your email.");
-        } else {
-          message.error("An unexpected error occurred.");
+        switch (result.error) {
+          case "email":
+            message.error("The provided credentials do not match our records.");
+            errorCb("email", {
+              message: "The provided credentials do not match our records.",
+            });
+            break;
+          case "user_not_found":
+            message.error("User not found. Please check your email.");
+            errorCb("email", {
+              message: "User not found. Please check your email.",
+            });
+            break;
+          case "not_confirmed":
+            message.error(
+              "Please verify your email address before proceeding."
+            );
+            // errorCb("email", {
+            //   message: "Please verify your email address before proceeding.",
+            // });
+            break;
+          default:
+            message.error("An unexpected error occurred.");
+            errorCb("generic", { message: "An unexpected error occurred." });
+            break;
         }
       } else if (result?.ok) {
         const session = await getSession();
@@ -162,26 +187,20 @@ export const useAuth = (errorCb?: ErrorCb) => {
             await dispatch(setLoggedInUserData(user));
             message.success("Login successful!");
           }
-          // const token = await encodeToken(user);
-          // localStorage.setItem('token', token);
-          // if (user) {
-          //   // console.log(token, 'ttt');
-          //   dispatch(setLoggedInUserData(user));
-          // }
           router.push("/chatbot");
         }
       }
+      return result;
     } catch (error) {
+      // Handle generic errors
       errorCb &&
         errorCb("generic", {
-          type: "backend",
           message: "An unexpected error occurred.",
         });
     } finally {
       setLoading(false);
     }
   };
-
   return {
     loading,
     loadingGoogle,

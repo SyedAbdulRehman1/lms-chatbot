@@ -1,17 +1,10 @@
 "use client";
-import { useCallback, useState, useEffect } from "react";
-import { useForm, FieldValues, SubmitHandler, set } from "react-hook-form";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { useForm, FieldValues } from "react-hook-form";
+import { FaCheckCircle } from "react-icons/fa";
 import { useSearchParams } from "next/navigation";
 
-import SocialLogin from "./components/SocialLogin";
-import Divider from "./components/Divider";
 import { Button } from "@/components/ui/button";
-import {
-  emailValidation,
-  nameValidation,
-  passwordValidation,
-} from "./validation/validation";
 import { useAuth } from "./hooks/useAuth";
 
 enum VARIANTS {
@@ -32,18 +25,13 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<IShowMessage | null>(null);
   const [bottomMessage, setBottomMessage] = useState<IShowMessage | null>(null);
+  const [confirmationMessage, setConfirmationMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    setValue,
-    formState: { errors },
-    clearErrors,
-  } = useForm<FieldValues>({
+  const { setError, setValue } = useForm<FieldValues>({
     defaultValues: {
       name: "",
       email: "",
@@ -51,30 +39,20 @@ const Auth = () => {
     },
   });
 
-  const {
-    loading,
-    register: registerUser,
-    signin,
-    passwordReset,
-    activateUser,
-  } = useAuth(setError);
-
-  const isLogin = variant === VARIANTS.login;
-  const isRegister = variant === VARIANTS.register;
-  const isReset = variant === VARIANTS.reset;
-
-  const changeVariant = (variant: Variant) => {
-    clearErrors();
-    setShowMessage(null);
-    setVariant(variant);
-  };
+  const { activateUser } = useAuth(setError);
 
   const confirmEmail = async (token: string) => {
     try {
-      const data = await activateUser(token);
-      setBottomMessage({ type: "success", message: data.message });
-      setValue("email", data.email);
+      const data: any = await activateUser(token);
+      setBottomMessage({ type: "success", message: data.message! });
+      setConfirmationMessage(
+        "Email successfully confirmed! Please proceed to login."
+      );
+
+      console.log(data, "emailll");
+      setValue("email", data?.data?.email);
     } catch (error: any) {
+      setErrorMessage(error?.message || "Error confirming your email.");
       setBottomMessage({ type: "error", message: error?.message || "Error" });
     }
   };
@@ -110,7 +88,40 @@ const Auth = () => {
   //     }
   //   };
 
-  return <div></div>;
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+      <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8 text-center">
+        {confirmationMessage ? (
+          <>
+            <FaCheckCircle className="text-green-500 text-4xl mb-4" />
+            <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+              {confirmationMessage}
+            </h1>
+            <Button
+              onClick={() => (window.location.href = "/login")}
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg mt-4"
+            >
+              Go to Login
+            </Button>
+          </>
+        ) : errorMessage ? (
+          <>
+            <h1 className="text-2xl font-semibold text-red-600 mb-2">Error</h1>
+            <p className="text-gray-600">{errorMessage}</p>
+          </>
+        ) : (
+          <>
+            <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+              Confirming your email...
+            </h1>
+            <p className="text-gray-600">
+              Please wait while we confirm your email address.
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Auth;

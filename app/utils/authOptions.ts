@@ -102,7 +102,7 @@ export const authOptions: AuthOptions = {
               providerAccountId: account.providerAccountId,
             },
           });
-          return true; // Allow the sign-in
+          return true;
         }
       }
       return true; // Allow sign-ins for other providers

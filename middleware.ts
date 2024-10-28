@@ -1,6 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createDefaultTeacherUser } from "./prisma/initUser";
 
 const PROTECTED_ROUTES = ["/dashboard", "/admin", "/profile"];
 
@@ -18,9 +19,9 @@ export async function middleware(req: NextRequest) {
     // Replace with your protected routes pattern
     return NextResponse.redirect(new URL("/auth", req.url)); // Redirect to sign-in
   }
-
+  // await createDefaultTeacherUser();
   return NextResponse.next();
 }
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/:path*", "/", "/(api|trpc)(.*)"],
 };

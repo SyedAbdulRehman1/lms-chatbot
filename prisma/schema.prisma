@@ -172,6 +172,7 @@ model StripeCustomer {
 enum UserType {
   TEACHER
   STUDENT
+  SUPER_ADMIN
 }
 // enum Role {
 //   user

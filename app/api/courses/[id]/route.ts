@@ -1,6 +1,7 @@
 import { authOptions } from "@/app/utils/authOptions";
+import { isUserType } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { isTeacher } from "@/lib/teacher";
+import { UseIsTeacher } from "@/lib/teacher";
 import { getServerSession } from "next-auth/next";
 // import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
@@ -11,7 +12,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const url = new URL(req.url);
-  // const userId = url.searchParams.get("userId");
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
     return new NextResponse("Unauthorized", { status: 401 });
@@ -98,12 +98,14 @@ export async function POST(req: Request) {
   try {
     const { title } = await req.json();
     const session = await getServerSession(authOptions);
+    const IsTeacher = session?.user.type === "TEACHER";
+
     if (!session || !session.user) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
     const userId = session.user.id;
 
-    if (!userId || !isTeacher()) {
+    if (!userId || !IsTeacher) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 

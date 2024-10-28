@@ -1,9 +1,4 @@
 "use client";
-import {
-  faEnvelope,
-  faEye,
-  faEyeSlash,
-} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Head from "next/head";
 import styles from "./login.module.css"; // Import CSS module
@@ -12,11 +7,15 @@ import * as Yup from "yup";
 import { useState } from "react";
 import "./login.css";
 import { useAuth } from "../(auth)/auth/hooks/useAuth";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 // import { useAuth } from "./hooks/useAuth";
 // import Header from '../../components/Header';
 
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const router = useRouter();
+
   const {
     loading,
     register: registerUser,
@@ -49,12 +48,19 @@ export default function Login() {
         .required("Password is required"),
     }),
     onSubmit: async (values) => {
-      try {
-        const message = await registerUser(values);
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong!");
+      // try {
+      const response = await registerUser(values);
+      console.log(response, "respppp");
+      if (response.success) {
+        toast.success(response.message!);
+      } else {
+        console.error("Error:", response.message);
+        toast.error(response.message!);
       }
+      // } catch (error) {
+      // console.error("Error:", error);
+      // toast.error("Something went wrong!");
+      // }
     },
   });
 
@@ -74,7 +80,12 @@ export default function Login() {
         const resp = await signin(values, (field: any, error: any) => {
           signInFormik.setFieldError(field, error.message); // Set form field errors dynamically
         });
-        console.log(resp, "Login successful");
+        if (resp && resp.error === "not_confirmed") {
+          alert("Please verify your email address before proceeding.");
+          router.push(
+            `/verify-email?email=${encodeURIComponent(values.email)}`
+          ); // Redirect with email as a query parameter
+        }
       } catch (error) {
         console.error("Error:", error);
         alert("Something went wrong!");

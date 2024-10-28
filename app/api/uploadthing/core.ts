@@ -1,10 +1,11 @@
 // import { auth } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
-import { isTeacher } from "@/lib/teacher";
+import { UseIsTeacher } from "@/lib/teacher";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 import { NextResponse } from "next/server";
+import { isUserType } from "@/lib/auth";
 
 const f = createUploadthing();
 
@@ -15,17 +16,17 @@ const handleAuth = async () => {
   if (!session || !session.user) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
-  // const { userId } = auth();
   const userId = session.user.id;
+  const IsTeacher = session?.user.type === "TEACHER";
 
   if (!userId) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
   // return userId
 
-  const isAuthorized = isTeacher();
+  // const isAuthorized = isUserType();
 
-  if (!userId || !isAuthorized) throw new Error("Unauthorized");
+  if (!userId || !IsTeacher) throw new Error("Unauthorized");
   return userId;
 };
 

@@ -6,10 +6,11 @@ import { LogOut } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { isTeacher } from "@/lib/teacher";
+import { UseIsTeacher } from "@/lib/teacher";
 
 import { SearchInput } from "./search-input";
 import { useSession } from "next-auth/react";
+import { isUserType } from "@/lib/auth";
 
 export const NavbarRoutes = () => {
   // const { userId } = useAuth();
@@ -36,7 +37,7 @@ export const NavbarRoutes = () => {
               Exit
             </Button>
           </Link>
-        ) : isTeacher() ? (
+        ) : isUserType() ? (
           <Link href="/teacher/courses">
             <Button size="sm" variant="ghost">
               Teacher mode
