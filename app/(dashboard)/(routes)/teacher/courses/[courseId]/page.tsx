@@ -35,10 +35,18 @@ import { fetchCourseDetails, fetchCategories } from "../CourseDetailsServer";
   }
   
   const CourseIdPage = ({ params }: any) => {
-    const { courseId } = params;
-  
-const loggedInUserData = useSelector((state: RootState) => state.user.user);
-  const userId = loggedInUserData?.id;
+    // const { courseId } = params;
+    const [courseId, setCourseId] = useState<string | null>(null);
+
+    useEffect(() => {
+      const loadParams = async () => {
+        const unwrappedParams = await params; 
+        setCourseId(unwrappedParams.courseId);
+      };
+      loadParams();
+    }, [params]);
+    const loggedInUserData = useSelector((state: RootState) => state.user.user);
+    const userId = loggedInUserData?.id;
 
   const [course, setCourse] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
@@ -47,16 +55,18 @@ const loggedInUserData = useSelector((state: RootState) => state.user.user);
     if (!userId) {
       redirect("/");
     }
+    // console.log(courseId,"corrrr")
 
     const loadData = async () => {
-      const courseDetails = await fetchCourseDetails(params.courseId, userId);
+
+      const courseDetails = await fetchCourseDetails(courseId, userId);
       const categoryOptions = await fetchCategories();
       setCourse(courseDetails);
       setCategories(categoryOptions);
     };
 
     loadData();
-  }, [params.courseId, userId]);
+  }, [courseId, userId]);
 
   if (!course) {
     return <p>Loading...</p>;
@@ -93,7 +103,7 @@ const loggedInUserData = useSelector((state: RootState) => state.user.user);
           </div>
           <Actions
             disabled={!isComplete}
-            courseId={params.courseId}
+            courseId={courseId}
             isPublished={course.isPublished}
           />
         </div>

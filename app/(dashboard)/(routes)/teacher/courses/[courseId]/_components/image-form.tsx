@@ -28,8 +28,15 @@ export const ImageForm = ({
   courseId
 }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null); 
 
-  const toggleEdit = () => setIsEditing((current) => !current);
+
+  const toggleEdit = () => {
+    setIsEditing((current) => !current);
+    if (isEditing) {
+      setPreviewImage(null); 
+    }
+  };
 
   const router = useRouter();
 
@@ -37,12 +44,45 @@ export const ImageForm = ({
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
       toast.success("Course updated");
+      setPreviewImage(values.imageUrl); 
       toggleEdit();
       router.refresh();
     } catch {
       toast.error("Something went wrong");
     }
   }
+  // const handleFileChange = async (file: File) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        const file = files[0]; // Get the first file
+        const fileURL = URL.createObjectURL(file);
+
+        setPreviewImage(fileURL); 
+        const formData = new FormData();
+        formData.append("file", file); // Append the file to FormData
+  
+        try {
+          // Upload the file
+          const response = await axios.post(`/api/courses/${courseId}/upload`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+  
+          // Check if the response has a URL
+          if (response.data.url) {
+            onSubmit({ imageUrl: response.data.url }); // Update course with the new image URL
+          }
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          toast.error("File upload failed");
+        }
+      } else {
+        setPreviewImage(null); // Reset preview if no file is selected
+      }
+    };
+  console.log(initialData.imageUrl,"initialData.imageUrlinitialData.imageUrl")
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -75,23 +115,32 @@ export const ImageForm = ({
           <div className="relative aspect-video mt-2">
             <Image
               alt="Upload"
-              fill
+              height={100}
+              width={100}
               className="object-cover rounded-md"
-              src={initialData.imageUrl}
+              // src={initialData.imageUrl}
+              src={`${previewImage || initialData.imageUrl}?t=${Date.now()}`} // Append timestamp to URL
+
             />
           </div>
         )
       )}
       {isEditing && (
         <div>
-          <FileUpload
+          {/* <FileUpload
             endpoint="courseImage"
             onChange={(url) => {
               if (url) {
                 onSubmit({ imageUrl: url });
               }
             }}
-          />
+          /> */}
+                <input
+        type="file"
+        accept="image/*" // Only allow image files
+        onChange={handleFileChange}
+      />
+
           <div className="text-xs text-muted-foreground mt-4">
             16:9 aspect ratio recommended
           </div>
