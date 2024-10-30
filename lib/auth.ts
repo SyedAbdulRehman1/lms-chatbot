@@ -1,5 +1,7 @@
 "use client";
 export const getUserDataFromLocalStorage = () => {
+  if (typeof window !== "undefined") {
+
   try {
     const user = localStorage.getItem("user");
     if (user) {
@@ -10,7 +12,7 @@ export const getUserDataFromLocalStorage = () => {
   } catch (error) {
     console.error("Error parsing user data from localStorage:", error);
     return null; // Return null in case of an error
-  }
+  }}
 };
 export const isUserType = () => {
   const userData = getUserDataFromLocalStorage();

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Inter } from "next/font/google";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "./store/store";
@@ -56,12 +56,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Provider store={store}>
+        <Suspense fallback={null}>
+
           <FetchUserData />
           <ConfettiProvider />
           <AuthContext>
             <ToastProvider />
             {children}
           </AuthContext>
+          </Suspense>
+
         </Provider>
       </body>
     </html>

@@ -1,9 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { useSearchParams } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import { useAuth } from "./hooks/useAuth";
 
@@ -20,7 +19,7 @@ interface IShowMessage {
 
 type Variant = VARIANTS.login | VARIANTS.register | VARIANTS.reset;
 
-const Auth = () => {
+const AuthContent = () => {
   const [variant, setVariant] = useState<Variant>(VARIANTS.login);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<IShowMessage | null>(null);
@@ -61,32 +60,7 @@ const Auth = () => {
     if (token) {
       confirmEmail(token);
     }
-  }, [token]);
-
-  //   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-  //     setBottomMessage(null);
-  //     if (isRegister) {
-  //       try {
-  //         const message = await registerUser(data);
-  //         setShowMessage({ type: 'success', message });
-  //       } catch (error: any) {
-  //         setShowMessage({ type: 'error', message: error?.message || 'Error' });
-  //       }
-  //     }
-  //     if (isLogin) {
-  //       const user = await signin(data);
-  //       console.log(user, 'usser111');
-  //       await signin(data);
-  //     }
-  //     if (isReset) {
-  //       try {
-  //         const message = await passwordReset(data);
-  //         setShowMessage({ type: 'success', message });
-  //       } catch (error: any) {
-  //         setShowMessage({ type: 'error', message: error?.message || 'Error' });
-  //       }
-  //     }
-  //   };
+  }, [token, confirmEmail]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
@@ -124,7 +98,142 @@ const Auth = () => {
   );
 };
 
+const Auth = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <AuthContent />
+  </Suspense>
+);
+
 export default Auth;
+
+
+// "use client";
+// import { useState, useEffect } from "react";
+// import { useForm, FieldValues } from "react-hook-form";
+// import { FaCheckCircle } from "react-icons/fa";
+// import { useSearchParams } from "next/navigation";
+
+// import { Button } from "@/components/ui/button";
+// import { useAuth } from "./hooks/useAuth";
+
+// enum VARIANTS {
+//   login = "LOGIN",
+//   register = "REGISTER",
+//   reset = "RESET PASSWORD",
+// }
+
+// interface IShowMessage {
+//   type: "error" | "success";
+//   message: string;
+// }
+
+// type Variant = VARIANTS.login | VARIANTS.register | VARIANTS.reset;
+
+// const Auth = () => {
+//   const [variant, setVariant] = useState<Variant>(VARIANTS.login);
+//   const [showPassword, setShowPassword] = useState<boolean>(false);
+//   const [showMessage, setShowMessage] = useState<IShowMessage | null>(null);
+//   const [bottomMessage, setBottomMessage] = useState<IShowMessage | null>(null);
+//   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
+//   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+//   const searchParams = useSearchParams();
+//   const token = searchParams.get("token");
+
+//   const { setError, setValue } = useForm<FieldValues>({
+//     defaultValues: {
+//       name: "",
+//       email: "",
+//       password: "",
+//     },
+//   });
+
+//   const { activateUser } = useAuth(setError);
+
+//   const confirmEmail = async (token: string) => {
+//     try {
+//       const data: any = await activateUser(token);
+//       setBottomMessage({ type: "success", message: data.message! });
+//       setConfirmationMessage(
+//         "Email successfully confirmed! Please proceed to login."
+//       );
+
+//       console.log(data, "emailll");
+//       setValue("email", data?.data?.email);
+//     } catch (error: any) {
+//       setErrorMessage(error?.message || "Error confirming your email.");
+//       setBottomMessage({ type: "error", message: error?.message || "Error" });
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (token) {
+//       confirmEmail(token);
+//     }
+//   }, [token]);
+
+//   //   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+//   //     setBottomMessage(null);
+//   //     if (isRegister) {
+//   //       try {
+//   //         const message = await registerUser(data);
+//   //         setShowMessage({ type: 'success', message });
+//   //       } catch (error: any) {
+//   //         setShowMessage({ type: 'error', message: error?.message || 'Error' });
+//   //       }
+//   //     }
+//   //     if (isLogin) {
+//   //       const user = await signin(data);
+//   //       console.log(user, 'usser111');
+//   //       await signin(data);
+//   //     }
+//   //     if (isReset) {
+//   //       try {
+//   //         const message = await passwordReset(data);
+//   //         setShowMessage({ type: 'success', message });
+//   //       } catch (error: any) {
+//   //         setShowMessage({ type: 'error', message: error?.message || 'Error' });
+//   //       }
+//   //     }
+//   //   };
+
+//   return (
+//     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+//       <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8 text-center">
+//         {confirmationMessage ? (
+//           <>
+//             <FaCheckCircle className="text-green-500 text-4xl mb-4" />
+//             <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+//               {confirmationMessage}
+//             </h1>
+//             <Button
+//               onClick={() => (window.location.href = "/login")}
+//               className="bg-blue-500 text-white px-6 py-2 rounded-lg mt-4"
+//             >
+//               Go to Login
+//             </Button>
+//           </>
+//         ) : errorMessage ? (
+//           <>
+//             <h1 className="text-2xl font-semibold text-red-600 mb-2">Error</h1>
+//             <p className="text-gray-600">{errorMessage}</p>
+//           </>
+//         ) : (
+//           <>
+//             <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+//               Confirming your email...
+//             </h1>
+//             <p className="text-gray-600">
+//               Please wait while we confirm your email address.
+//             </p>
+//           </>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Auth;
 
 // 'use client';
 // import { useCallback, useState, useEffect } from 'react';

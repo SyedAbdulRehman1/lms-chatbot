@@ -9,10 +9,10 @@ import FetchUserData from "@/components/FetchUserData";
 // import { FetchUserData } from "../layout";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Provider store={store}>
-      <FetchUserData />
+    // <Provider store={store}>
+    //   <FetchUserData />
 
-      <AuthContext>
+      // <AuthContext>
         <div className="h-full">
           <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50">
             <Navbar />
@@ -22,8 +22,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
           <main className="md:pl-56 pt-[80px] h-full">{children}</main>
         </div>
-      </AuthContext>
-    </Provider>
+    //   </AuthContext>
+    // </Provider>
   );
 };
 

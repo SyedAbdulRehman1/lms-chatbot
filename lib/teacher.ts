@@ -11,27 +11,27 @@ export const UseIsTeacher = () => {
 };
 // import { useEffect, useState } from 'react';
 
-export const useUserData = () => {
-  const [userData, setUserData] = useState<any>(null);
+// export const useUserData = () => {
+//   const [userData, setUserData] = useState<any>(null);
 
-  useEffect(() => {
-    try {
-      const user = localStorage.getItem("user");
-      console.log(user, "udddd");
-      if (user) {
-        const parsedUser = JSON.parse(user);
-        setUserData(parsedUser);
-        console.log("Parsed user data:", parsedUser);
-      } else {
-        console.log("No user data found in localStorage.");
-      }
-    } catch (error) {
-      console.error("Error parsing user data from localStorage:", error);
-    }
-  }, []); // Empty dependency array to run only once on mount
+//   useEffect(() => {
+//     try {
+//       const user = localStorage.getItem("user");
+//       console.log(user, "udddd");
+//       if (user) {
+//         const parsedUser = JSON.parse(user);
+//         setUserData(parsedUser);
+//         console.log("Parsed user data:", parsedUser);
+//       } else {
+//         console.log("No user data found in localStorage.");
+//       }
+//     } catch (error) {
+//       console.error("Error parsing user data from localStorage:", error);
+//     }
+//   }, []); // Empty dependency array to run only once on mount
 
-  return userData;
-};
+//   return userData;
+// };
 
 // import { RootState } from "@/app/store/store";
 // import { useSelector } from "react-redux";
