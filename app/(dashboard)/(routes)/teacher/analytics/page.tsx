@@ -1,7 +1,7 @@
 "use client"; // This makes it a Client Component
 
 import { useEffect, useState } from "react";
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { getAnalytics } from "@/actions/get-analytics";
 import { DataCard } from "./_components/data-card";

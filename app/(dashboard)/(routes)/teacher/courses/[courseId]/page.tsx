@@ -27,8 +27,17 @@ import { fetchCourseDetails, fetchCategories } from "../CourseDetailsServer";
 // } from "@/app/(dashboard)/(routes)/teacher/courses/CourseDetailsServer";
 // import { fetchCourseDetails, fetchCategories } from "./CourseDetailsServer";
 
-const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
-  const loggedInUserData = useSelector((state: RootState) => state.user.user);
+// const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
+  interface CourseIdPageProps {
+    params: {
+      courseId: string;
+    };
+  }
+  
+  const CourseIdPage = ({ params }: any) => {
+    const { courseId } = params;
+  
+const loggedInUserData = useSelector((state: RootState) => state.user.user);
   const userId = loggedInUserData?.id;
 
   const [course, setCourse] = useState<any>(null);

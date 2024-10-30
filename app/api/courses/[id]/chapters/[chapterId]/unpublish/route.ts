@@ -1,22 +1,36 @@
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/utils/authOptions";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { courseId: string; chapterId: string } }
-) {
+// export async function PATCH(
+//   req: Request,
+//   { params }: { params: { courseId: string; chapterId: string } }
+// ) {
+  export async function PATCH(
+    req: Request,
+    { params }: { params: Promise<{ courseId: string; chapterId: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { courseId, chapterId } = resolvedParams;
+  
   try {
-    const { userId } = auth();
-
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userId = session.user.id;
+    const user = session.user;
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const ownCourse = await db.course.findUnique({
       where: {
-        id: params.courseId,
+        id: courseId,
         userId
       }
     });
@@ -27,8 +41,8 @@ export async function PATCH(
 
     const unpublishedChapter = await db.chapter.update({
       where: {
-        id: params.chapterId,
-        courseId: params.courseId,
+        id: chapterId,
+        courseId: courseId,
       },
       data: {
         isPublished: false,
@@ -37,7 +51,7 @@ export async function PATCH(
 
     const publishedChaptersInCourse = await db.chapter.findMany({
       where: {
-        courseId: params.courseId,
+        courseId: courseId,
         isPublished: true,
       }
     });
@@ -45,7 +59,7 @@ export async function PATCH(
     if (!publishedChaptersInCourse.length) {
       await db.course.update({
         where: {
-          id: params.courseId,
+          id: courseId,
         },
         data: {
           isPublished: false,

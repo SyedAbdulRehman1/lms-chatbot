@@ -1,14 +1,22 @@
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string; chapterId: string } }
-) {
+// export async function PATCH(
+//   req: Request,
+//   { params }: { params: { id: string; chapterId: string } }
+// ) {
+  export async function PATCH(
+    req: Request,
+    { params }: { params: Promise<{ id: string; chapterId: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id, chapterId } = resolvedParams;
+
   try {
     // const { userId } = auth();
     const session = await getServerSession(authOptions);
@@ -22,7 +30,7 @@ export async function PATCH(
 
     const ownCourse = await db.course.findUnique({
       where: {
-        id: params.id,
+        id: id,
         userId,
       },
     });
@@ -33,14 +41,14 @@ export async function PATCH(
 
     const chapter = await db.chapter.findUnique({
       where: {
-        id: params.chapterId,
-        courseId: params.id,
+        id: chapterId,
+        courseId: id,
       },
     });
 
     const muxData = await db.muxData.findUnique({
       where: {
-        chapterId: params.chapterId,
+        chapterId: chapterId,
       },
     });
 
@@ -56,8 +64,8 @@ export async function PATCH(
 
     const publishedChapter = await db.chapter.update({
       where: {
-        id: params.chapterId,
-        courseId: params.id,
+        id: chapterId,
+        courseId: id,
       },
       data: {
         isPublished: true,

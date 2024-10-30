@@ -7,19 +7,19 @@ import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = headers().get("Stripe-Signature") as string;
+  // const signature = headers().get("Stripe-Signature") as string;
 
   let event: Stripe.Event;
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
-  } catch (error: any) {
-    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 })
-  }
+  // try {
+  //   event = stripe.webhooks.constructEvent(
+  //     body,
+  //     signature,
+  //     process.env.STRIPE_WEBHOOK_SECRET!
+  //   )
+  // } catch (error: any) {
+  //   return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 })
+  // }
 
   const session = event.data.object as Stripe.Checkout.Session;
   const userId = session?.metadata?.userId;

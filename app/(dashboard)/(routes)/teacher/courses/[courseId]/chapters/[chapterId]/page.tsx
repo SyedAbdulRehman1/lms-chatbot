@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
@@ -16,11 +16,24 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 import { NextResponse } from "next/server";
 
-const ChapterIdPage = async ({
-  params,
-}: {
-  params: { courseId: string; chapterId: string };
-}) => {
+// const ChapterIdPage = async ({
+//   params,
+// }: {
+//   params: { courseId: string; chapterId: string };
+// }) => {
+  interface ChapterIdPageProps {
+    params: Promise<{
+      courseId: string;
+      chapterId: string;
+    }>;
+  }
+  
+  const ChapterIdPage = async ({ params }: ChapterIdPageProps) => {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { courseId, chapterId } = resolvedParams;
+  
+  
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
     return new NextResponse("Unauthorized", { status: 401 });
@@ -33,8 +46,8 @@ const ChapterIdPage = async ({
 
   const chapter = await db.chapter.findUnique({
     where: {
-      id: params.chapterId,
-      courseId: params.courseId,
+      id: chapterId,
+      courseId: courseId,
     },
     include: {
       muxData: true,
@@ -66,7 +79,7 @@ const ChapterIdPage = async ({
         <div className="flex items-center justify-between">
           <div className="w-full">
             <Link
-              href={`/teacher/courses/${params.courseId}`}
+              href={`/teacher/courses/${courseId}`}
               className="flex items-center text-sm hover:opacity-75 transition mb-6"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -81,8 +94,8 @@ const ChapterIdPage = async ({
               </div>
               <ChapterActions
                 disabled={!isComplete}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
                 isPublished={chapter.isPublished}
               />
             </div>
@@ -97,13 +110,13 @@ const ChapterIdPage = async ({
               </div>
               <ChapterTitleForm
                 initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
               />
               <ChapterDescriptionForm
                 initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
               />
             </div>
             <div>
@@ -113,8 +126,8 @@ const ChapterIdPage = async ({
               </div>
               <ChapterAccessForm
                 initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
               />
             </div>
           </div>
@@ -125,8 +138,8 @@ const ChapterIdPage = async ({
             </div>
             <ChapterVideoForm
               initialData={chapter}
-              chapterId={params.chapterId}
-              courseId={params.courseId}
+              chapterId={chapterId}
+              courseId={courseId}
             />
           </div>
         </div>

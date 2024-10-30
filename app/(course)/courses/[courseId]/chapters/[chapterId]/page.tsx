@@ -13,12 +13,15 @@ import { CourseProgressButton } from "./_components/course-progress-button";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 import { NextResponse } from "next/server";
-
+type ChapterIdPageProps = {
+  params: {
+    courseId: string;
+    chapterId: string;
+  };
+};
 const ChapterIdPage = async ({
   params,
-}: {
-  params: { courseId: string; chapterId: string };
-}) => {
+}: any) => {
   // const { userId } = auth();
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {

@@ -1,14 +1,24 @@
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
+type Params = Promise<{ courseId: string; }>;
+
 const CourseIdPage = async ({
   params
 }: {
-  params: { courseId: string; }
+  params: Params;
 }) => {
+  const resolvedParams = await params;
+  const courseId = resolvedParams.courseId;
+
+  // Aapka logic yahaan aata hai
+  // For example, fetch course details using courseId
+  // const courseDetails = await getCourseDetails(courseId);
+
+
   const course = await db.course.findUnique({
     where: {
-      id: params.courseId,
+      id: courseId,
     },
     include: {
       chapters: {

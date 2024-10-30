@@ -1,14 +1,23 @@
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string; attachmentId: string } }
-) {
+// export async function DELETE(
+//   req: Request,
+//   { params }: { params: { id: string; attachmentId: string } }
+// ) {
+  export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ id: string; attachmentId: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id, attachmentId } = resolvedParams;
+  
+  
   try {
     // const { userId } = auth();
     const session = await getServerSession(authOptions);
@@ -24,7 +33,7 @@ export async function DELETE(
 
     const courseOwner = await db.course.findUnique({
       where: {
-        id: params.id,
+        id: id,
         userId: userId,
       },
     });
@@ -35,8 +44,8 @@ export async function DELETE(
 
     const attachment = await db.attachment.delete({
       where: {
-        courseId: params.id,
-        id: params.attachmentId,
+        courseId: id,
+        id: attachmentId,
       },
     });
 

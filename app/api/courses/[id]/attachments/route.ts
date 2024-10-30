@@ -1,14 +1,23 @@
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// export async function POST(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+  export async function POST(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+  
+  
   try {
     // const { userId } = auth();
     const session = await getServerSession(authOptions);
@@ -25,7 +34,7 @@ export async function POST(
 
     const courseOwner = await db.course.findUnique({
       where: {
-        id: params.id,
+        id: id,
         userId: userId,
       },
     });
@@ -38,7 +47,7 @@ export async function POST(
       data: {
         url,
         name: url.split("/").pop(),
-        courseId: params.id,
+        courseId: id,
       },
     });
 

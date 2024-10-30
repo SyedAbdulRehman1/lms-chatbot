@@ -11,14 +11,23 @@ import { Spin } from "antd";
 import axios from "axios";
 // import { fetchCategoriesAndCourses } from "@/lib/server-functions"; // Server-side function
 
-interface SearchPageProps {
-  searchParams: {
-    title: string;
-    categoryId: string;
-  };
-}
+// interface SearchPageProps {
+//   searchParams: {
+//     title: string;
+//     categoryId: string;
+//   };
+// }
 
-const SearchPage = ({ searchParams }: SearchPageProps) => {
+// const SearchPage = ({ searchParams }: SearchPageProps) => {
+  interface SearchPageProps {
+    searchParams: Promise<{
+      title: string;
+      categoryId: string;
+    }>;
+  }
+  
+  const SearchPage =  ({ searchParams }: SearchPageProps) => {
+  
   const router = useRouter();
   const loggedInUserData = useSelector((state: RootState) => state.user.user);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(

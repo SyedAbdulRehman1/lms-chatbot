@@ -5,7 +5,8 @@ import "../../css/style.css";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import { AuthContext } from "@/context/AutxContext";
-import { FetchUserData } from "../layout";
+import FetchUserData from "@/components/FetchUserData";
+// import { FetchUserData } from "../layout";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={store}>

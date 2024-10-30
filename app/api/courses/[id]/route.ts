@@ -7,10 +7,18 @@ import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 
 // Named export for the GET request
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// export async function GET(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+  export async function GET(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+  
   const url = new URL(req.url);
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
@@ -23,7 +31,7 @@ export async function GET(
 
   try {
     const course = await db.course.findUnique({
-      where: { id: params.id, userId },
+      where: { id: id, userId },
       include: {
         chapters: { orderBy: { position: "asc" } },
         attachments: { orderBy: { createdAt: "desc" } },
@@ -45,10 +53,19 @@ export async function GET(
   }
 }
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// export async function PATCH(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+  export async function PATCH(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+  
+  
   // const url = new URL(req.url);
   // const userId = url.searchParams.get("userId");
 
@@ -66,7 +83,7 @@ export async function PATCH(
 
     // Verify that the course exists and belongs to the user
     const course = await db.course.findUnique({
-      where: { id: params.id, userId },
+      where: { id: id, userId },
     });
 
     if (!course) {
@@ -77,7 +94,7 @@ export async function PATCH(
 
     // Update the course
     const updatedCourse = await db.course.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         title,
         description,
