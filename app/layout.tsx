@@ -10,7 +10,11 @@ import { ConfettiProvider } from "@/components/providers/confetti-provider";
 import { AuthContext } from "@/context/AutxContext";
 import axios from "axios";
 import FetchUserData from "@/components/FetchUserData";
-
+import "../css/style.css";
+import "./lib/animate/animate.min.css";
+import "./lib/owlcarousel/assets/owl.carousel.min.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
 // Custom component to fetch user data
 // export  function  FetchUserData(){
 //   const dispatch = useDispatch();

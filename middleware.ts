@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createDefaultTeacherUser } from "./prisma/initUser";
 
-const PROTECTED_ROUTES = ["/dashboard", "/admin", "/profile"];
+const PROTECTED_ROUTES = [ "/admin", "/profile"];
+// const PROTECTED_ROUTES = ["/dashboard", "/admin", "/profile"];
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.SECRET });
