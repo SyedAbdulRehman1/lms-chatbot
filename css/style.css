@@ -1,4 +1,5 @@
 /********** Template CSS **********/
+@import 'bootstrap/dist/css/bootstrap.min.css';
 @import "bootstrap.min.css";
 
 @tailwind base;

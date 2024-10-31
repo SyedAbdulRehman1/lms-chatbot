@@ -8,10 +8,12 @@ import Categories from '@/components/home/categories';
 import Courses from '@/components/home/courses';
 import Team from '@/components/home/team';
 import Testimonial from '@/components/home/testimonial';
+import Navbar from '@/components/navbar';
 
 export default function Home() {
   return (
     <div>
+        {/* <Navbar /> */}
       
       <Carousel />
       <Service />
