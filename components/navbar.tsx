@@ -80,7 +80,7 @@ export default function Navbar() {
             onMouseLeave={() => setIsAvatarHovered(false)}
           >
             <Image
-              src={user.picture} 
+              src={user.picture??"/img/avatar-user.svg"} 
               alt="User Avatar"
               height={40}
               width={40}

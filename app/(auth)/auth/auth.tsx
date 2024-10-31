@@ -99,9 +99,9 @@ const AuthContent = () => {
 };
 
 const Auth = () => (
-  <Suspense fallback={<div>Loading...</div>}>
+  // <Suspense fallback={<div>Loading...</div>}>
     <AuthContent />
-  </Suspense>
+  // </Suspense>
 );
 
 export default Auth;

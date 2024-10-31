@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import {
   CircleDollarSign,
@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { IconBadge } from "@/components/icon-badge";
 import { fetchCourseDetails, fetchCategories } from "../CourseDetailsServer";
+import React from "react";
 // import {
 //   fetchCourseDetails,
 //   fetchCategories,
@@ -33,18 +34,22 @@ import { fetchCourseDetails, fetchCategories } from "../CourseDetailsServer";
       courseId: string;
     };
   }
-  
-  const CourseIdPage = ({ params }: any) => {
-    // const { courseId } = params;
-    const [courseId, setCourseId] = useState<string | null>(null);
+  type Params = Promise<{ courseId: string }>
 
-    useEffect(() => {
-      const loadParams = async () => {
-        const unwrappedParams = await params; 
-        setCourseId(unwrappedParams.courseId);
-      };
-      loadParams();
-    }, [params]);
+  const CourseIdPage = (props: { params: Params }) => {
+    // const { courseId } =React.use(params);
+    let params = use(props.params);
+    const courseId = params.courseId;
+  
+    // const [courseId, setCourseId] = useState<string | null>(null);
+    // console.log(courseId,"courrr")
+    // useEffect(() => {
+    //   const loadParams = async () => {
+    //     const unwrappedParams = await params; 
+    //     setCourseId(unwrappedParams.courseId);
+    //   };
+    //   loadParams();
+    // }, [params]);
     const loggedInUserData = useSelector((state: RootState) => state.user.user);
     const userId = loggedInUserData?.id;
 
