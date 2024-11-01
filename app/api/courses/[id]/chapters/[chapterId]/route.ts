@@ -1,6 +1,7 @@
-import Mux from "@mux/mux-node";
+// import Mux from "@mux/mux-node";
 // import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+// import mux from "@/lib/mux"; // Import the Mux configuration
 
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth/next";
@@ -172,20 +173,26 @@ import { authOptions } from "@/app/utils/authOptions";
           },
         });
       }
+      const asset  = await mux.assets.create({
+        input: values.videoUrl, // Use the file stream for upload
+        playback_policy: "public", // Set playback policy
+        test: false,
 
+      });
+  
       // const asset = await Video.Assets.create({
       //   input: values.videoUrl,
       //   playback_policy: "public",
       //   test: false,
       // });
 
-      // await db.muxData.create({
-      //   data: {
-      //     chapterId: chapterId,
-      //     assetId: asset.id,
-      //     playbackId: asset.playback_ids?.[0]?.id,
-      //   },
-      // });
+      await db.muxData.create({
+        data: {
+          chapterId: chapterId,
+          assetId: asset.id,
+          playbackId: asset.playback_ids?.[0]?.id,
+        },
+      });
     }
 
     return NextResponse.json(chapter);
