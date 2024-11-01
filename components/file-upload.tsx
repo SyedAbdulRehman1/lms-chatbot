@@ -20,6 +20,7 @@ export const FileUpload = ({
     <UploadDropzone<FileRouterType, typeof endpoint> // Specify the generic types
       endpoint={endpoint}
       onClientUploadComplete={(res) => {
+        console.log(res,"ressssssss9393939")
         onChange(res?.[0]?.url); // Ensure to safely access the URL
       }}
       onUploadError={(error: Error) => {
