@@ -40,7 +40,10 @@ export default function Navbar() {
 
   return (
     <nav className="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-      <a href="index.html" className="navbar-brand d-flex align-items-center px-4 px-lg-5">
+      <a
+        href="index.html"
+        className="navbar-brand d-flex align-items-center px-4 px-lg-5"
+      >
         <h2 className="m-0 text-primary">
           <i className="fa fa-book me-3"></i>eLEARNING
         </h2>
@@ -55,24 +58,49 @@ export default function Navbar() {
       >
         <span className="navbar-toggler-icon"></span>
       </button>
-      <div className={`navbar-collapse ${!isCollapsed ? 'd-block' : 'd-none'}`} id="navbarCollapse">
+      <div
+        className={`navbar-collapse ${!isCollapsed ? "d-block" : "d-none"}`}
+        id="navbarCollapse"
+      >
         <div className="navbar-nav ms-auto p-4 p-lg-0">
-          <Link href="index.html" className="nav-item nav-link active">Home</Link>
-          <Link href="about.html" className="nav-item nav-link">About</Link>
-          <Link href="courses.html" className="nav-item nav-link">Courses</Link>
+          <Link href="index.html" className="nav-item nav-link active">
+            Home
+          </Link>
+          <Link href="/about" className="nav-item nav-link">
+            About
+          </Link>
+          <Link href="courses.html" className="nav-item nav-link">
+            Courses
+          </Link>
           <div className="nav-item dropdown">
-            <Link href="#" className="nav-link dropdown-toggle" onClick={toggleDropdown}>
+            <Link
+              href="#"
+              className="nav-link dropdown-toggle"
+              onClick={toggleDropdown}
+            >
               Pages
             </Link>
-            <div className={`dropdown-menu fade-down m-0 ${isDropdownOpen ? 'd-block' : 'd-none'}`}>
-              <Link href="team.html" className="dropdown-item">Our Team</Link>
-              <Link href="testimonial.html" className="dropdown-item">Testimonial</Link>
-              <Link href="404.html" className="dropdown-item">404 Page</Link>
+            <div
+              className={`dropdown-menu fade-down m-0 ${
+                isDropdownOpen ? "d-block" : "d-none"
+              }`}
+            >
+              <Link href="team.html" className="dropdown-item">
+                Our Team
+              </Link>
+              <Link href="testimonial.html" className="dropdown-item">
+                Testimonial
+              </Link>
+              <Link href="404.html" className="dropdown-item">
+                404 Page
+              </Link>
             </div>
           </div>
-          <Link href="contact.html" className="nav-item nav-link">Contact</Link>
+          <Link href="contact.html" className="nav-item nav-link">
+            Contact
+          </Link>
         </div>
-        
+
         {user ? (
           <div
             className="position-relative d-inline-block"
@@ -80,22 +108,30 @@ export default function Navbar() {
             onMouseLeave={() => setIsAvatarHovered(false)}
           >
             <Image
-              src={user.picture??"/img/avatar-user.svg"} 
+              src={user.picture ?? "/img/avatar-user.svg"}
               alt="User Avatar"
               height={40}
               width={40}
               className="rounded-circle"
-              style={{ width: '40px', height: '40px' }} // Adjust size as needed
+              style={{ width: "40px", height: "40px" }} // Adjust size as needed
             />
             {isAvatarHovered && (
-              <div className="dropdown-menu show" style={{ position: 'absolute', top: '100%', right: 0 }}>
+              <div
+                className="dropdown-menu show"
+                style={{ position: "absolute", top: "100%", right: 0 }}
+              >
                 <div className="dropdown-item">Hello, {user.name}</div>
-                <button className="dropdown-item" onClick={handleLogout}>Logout</button>
+                <button className="dropdown-item" onClick={handleLogout}>
+                  Logout
+                </button>
               </div>
             )}
           </div>
         ) : (
-          <Link href="/login" className="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
+          <Link
+            href="/login"
+            className="btn btn-primary py-4 px-lg-5 d-none d-lg-block"
+          >
             Join Now <i className="fa fa-arrow-right ms-3"></i>
           </Link>
         )}
