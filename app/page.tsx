@@ -9,6 +9,7 @@ import Courses from '@/components/home/courses';
 import Team from '@/components/home/team';
 import Testimonial from '@/components/home/testimonial';
 import Navbar from '@/components/navbar';
+import InstructorSlider from '@/components/home/instructor-slider';
 
 export default function Home() {
   return (
@@ -21,7 +22,9 @@ export default function Home() {
       <Categories />
       <Courses />
       <Team />
-      <Testimonial />
+      <InstructorSlider />
+      {/* <Testimonial /> */}
+      <Testimonial/>
       {/* Add other components here */}
 
       <a href="#" className="btn btn-lg btn-primary btn-lg-square back-to-top">

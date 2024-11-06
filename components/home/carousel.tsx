@@ -20,8 +20,11 @@ export default function Carousel() {
           <Image
             src="/img/carousel-1.jpg"
             alt="Carousel Image"
-            width={800}
-            height={600}
+      width={800}
+      height={100}
+      className="w-full h-screen"
+            // width={800}
+            // height={600}
             quality={100}
           />
           <div
@@ -58,6 +61,8 @@ export default function Carousel() {
             src="/img/carousel-2.jpg"
             alt="Carousel Image"
             width={800}
+             className="w-full h-screen"
+
             height={600}
             quality={100}
           />
