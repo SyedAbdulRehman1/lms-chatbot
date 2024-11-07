@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import Head from "next/head";
 // import Header from '../../components/Header';
 import Carousel from '@/components/home/carousel';
 import Header from '@/components/home/HeaderWebsite';
@@ -14,8 +14,7 @@ import InstructorSlider from '@/components/home/instructor-slider';
 export default function Home() {
   return (
     <div>
-        <Navbar />
-      
+      <Navbar />
       <Carousel />
       <Service />
       <AboutUs />
@@ -30,8 +29,6 @@ export default function Home() {
       <a href="#" className="btn btn-lg btn-primary btn-lg-square back-to-top">
         <i className="bi bi-arrow-up"></i>
       </a>
-
-     
     </div>
   );
 }
