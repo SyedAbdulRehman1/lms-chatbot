@@ -10,9 +10,9 @@ import { ConfettiProvider } from "@/components/providers/confetti-provider";
 import { AuthContext } from "@/context/AutxContext";
 import axios from "axios";
 import FetchUserData from "@/components/FetchUserData";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import "../css/style.css";
 import "slick-carousel/slick/slick.css";
@@ -24,7 +24,6 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import Navbar from "@/components/navbar";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -33,29 +32,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    require('bootstrap/dist/js/bootstrap.bundle.min.js');
+    require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
-  
+
   return (
     <html lang="en">
       <body className={inter.className}>
-{/* <link href="css/style.css" rel="stylesheet"> */}
-
+        {/* <link href="css/style.css" rel="stylesheet"> */}
 
         <Provider store={store}>
-        <Suspense fallback={"<div>Loading</div>"}>
-
-          <FetchUserData />
-          <ConfettiProvider />
-          <AuthContext>
-            <ToastProvider />
-            {/* <Navbar /> */}
-            {children}
-          </AuthContext>
+          <Suspense fallback={"<div>Loading</div>"}>
+            <FetchUserData />
+            <ConfettiProvider />
+            <AuthContext>
+              <ToastProvider />
+              {/* <Navbar /> */}
+              {children}
+            </AuthContext>
           </Suspense>
-
         </Provider>
-
       </body>
     </html>
   );

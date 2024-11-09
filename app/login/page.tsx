@@ -9,6 +9,8 @@ import "./login.css";
 import { useAuth } from "../(auth)/auth/hooks/useAuth";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { DecodeToken } from "../utils/decodeToken";
 // import { useAuth } from "./hooks/useAuth";
 // import Header from '../../components/Header';
 
@@ -78,8 +80,18 @@ export default function Login() {
     onSubmit: async (values) => {
       try {
         const resp = await signin(values, (field: any, error: any) => {
-          signInFormik.setFieldError(field, error.message); // Set form field errors dynamically
+          signInFormik.setFieldError(field, error.message);
         });
+        if (resp?.accessToken) {
+          let user = await DecodeToken(resp?.accessToken);
+
+          Cookies.set("accessToken", resp.accessToken, {
+            expires: 7,
+            path: "/",
+          });
+          localStorage.setItem("accessToken", resp.accessToken);
+          router.push("/chatbot");
+        }
         if (resp && resp.error === "not_confirmed") {
           alert("Please verify your email address before proceeding.");
           router.push(

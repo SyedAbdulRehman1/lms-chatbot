@@ -6,18 +6,23 @@ const PROTECTED_ROUTES = ["/chatbot", "/dashboard"];
 const AUTH_ROUTES = ["/auth", "/login", "/register"];
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.SECRET }); 
+  // const token = await getToken({ req, secret: process.env.SECRET });
+  const tokenNext = await getToken({ req, secret: process.env.SECRET });
+
+  // If no token is found using getToken, fallback to checking cookies manually
+  const token = tokenNext || req.cookies.get("accessToken")?.value || null;
+
   const { pathname } = req.nextUrl;
-  
+
   if (token && AUTH_ROUTES.includes(pathname)) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   if (!token && PROTECTED_ROUTES.includes(pathname)) {
-    return NextResponse.redirect(new URL("/login", req.url)); 
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  return NextResponse.next(); 
+  return NextResponse.next();
 }
 
 export const config = {

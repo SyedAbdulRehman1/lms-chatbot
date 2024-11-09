@@ -26,7 +26,7 @@ const CoursesPage = () => {
   }
   // Handle loading states
   //  if (isLoadingUser) return <div>Loading user data...</div>;
-  if (loading) return <div>Loading courses...</div>;
+  // if (loading) return <div>Loading courses...</div>;
   if (error) return <div>Error loading courses: {error}</div>;
 
   // Redirect if no user ID is found
