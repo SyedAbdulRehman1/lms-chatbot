@@ -1,12 +1,15 @@
 // import { db } fro../../../../../lib/db/db";
 
 // import { db } from "@/lib/db"
+import { URL } from "@/app/constants/apiEndpoints";
+import Axios from "@/app/utils/axiosInstance";
 import axios from "axios";
 export const fetchCourseDetails = async (courseId: string, userId: string) => {
   try {
-    const response = await axios.get(
-      `/api/courses/${courseId}?userId=${userId}`
+    const response = await Axios.get(
+      `${URL.CREATE_COURSE + courseId}?userId=${userId}`
     );
+    console.log(response, "ressss");
 
     if (response.status !== 200) {
       throw new Error("Failed to fetch course details.");

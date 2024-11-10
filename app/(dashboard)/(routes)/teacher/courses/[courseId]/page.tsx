@@ -29,30 +29,31 @@ import React from "react";
 // import { fetchCourseDetails, fetchCategories } from "./CourseDetailsServer";
 
 // const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
-  interface CourseIdPageProps {
-    params: {
-      courseId: string;
-    };
-  }
-  type Params = Promise<{ courseId: string }>
+interface CourseIdPageProps {
+  params: {
+    courseId: string;
+  };
+}
+type Params = Promise<{ courseId: string }>;
 
-  const CourseIdPage = (props: { params: Params }) => {
-    // const { courseId } =React.use(params);
-    let params = use(props.params);
-    const courseId = params.courseId;
-  
-    // const [courseId, setCourseId] = useState<string | null>(null);
-    // console.log(courseId,"courrr")
-    // useEffect(() => {
-    //   const loadParams = async () => {
-    //     const unwrappedParams = await params; 
-    //     setCourseId(unwrappedParams.courseId);
-    //   };
-    //   loadParams();
-    // }, [params]);
-    const loggedInUserData = useSelector((state: RootState) => state.user.user);
-    const userId = loggedInUserData?.id;
+const CourseIdPage = (props: { params: Params }) => {
+  // const { courseId } =React.use(params);
+  let params = use(props.params);
+  const courseId = params.courseId;
 
+  // const [courseId, setCourseId] = useState<string | null>(null);
+  // console.log(courseId,"courrr")
+  // useEffect(() => {
+  //   const loadParams = async () => {
+  //     const unwrappedParams = await params;
+  //     setCourseId(unwrappedParams.courseId);
+  //   };
+  //   loadParams();
+  // }, [params]);
+  const loggedInUserData = useSelector((state: RootState) => state.user.user);
+
+  const userId = loggedInUserData?.id;
+  console.log(userId, "usseer");
   const [course, setCourse] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
 
@@ -63,7 +64,6 @@ import React from "react";
     // console.log(courseId,"corrrr")
 
     const loadData = async () => {
-
       const courseDetails = await fetchCourseDetails(courseId, userId);
       const categoryOptions = await fetchCategories();
       setCourse(courseDetails);

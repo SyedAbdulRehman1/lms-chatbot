@@ -21,19 +21,18 @@ import { NextResponse } from "next/server";
 // }: {
 //   params: { courseId: string; chapterId: string };
 // }) => {
-  interface ChapterIdPageProps {
-    params: Promise<{
-      courseId: string;
-      chapterId: string;
-    }>;
-  }
-  
-  const ChapterIdPage = async ({ params }: ChapterIdPageProps) => {
-    // Await the resolution of params
-    const resolvedParams = await params;
-    const { courseId, chapterId } = resolvedParams;
-  
-  
+interface ChapterIdPageProps {
+  params: Promise<{
+    courseId: string;
+    chapterId: string;
+  }>;
+}
+
+const ChapterIdPage = async ({ params }: ChapterIdPageProps) => {
+  // Await the resolution of params
+  const resolvedParams = await params;
+  const { courseId, chapterId } = resolvedParams;
+
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
     return new NextResponse("Unauthorized", { status: 401 });

@@ -154,9 +154,11 @@ export const useAuth = (errorCb?: ErrorCb) => {
     setLoading(true);
     const apiBaseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+    const isNest = process.env.NEXT_PUBLIC_API_BACKEND === "true";
+
     try {
       let result;
-      if (apiBaseUrl.includes("3001")) {
+      if (isNest) {
         const loginResponse = await Axios.post(URL.LOGIN_USER, data);
         console.log(loginResponse, "result from NestJS login");
         if (loginResponse.data?.accessToken) {

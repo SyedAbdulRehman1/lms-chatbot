@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 import { ChaptersList } from "./chapters-list";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import Axios from "@/app/utils/axiosInstance";
+import { URL } from "@/app/constants/apiEndpoints";
 
 interface ChaptersFormProps {
   initialData: Course & { chapters: Chapter[] };
@@ -59,7 +61,10 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       console.log(courseId, "courr");
-      await axios.post(`/api/courses/${courseId}/chapters`, values);
+      await Axios.post(
+        `${URL.CREATE_COURSE + courseId + URL.CHAPTERS}`,
+        values
+      );
       toast.success("Chapter created");
       toggleCreating();
       router.refresh();

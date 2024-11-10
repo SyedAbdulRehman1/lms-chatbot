@@ -1,9 +1,12 @@
 // src/services/apiService.ts
 import axios from "axios";
+const isNest = process.env.NEXT_PUBLIC_API_BACKEND === "true";
 
 // Create an instance of Axios
 const Axios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "",
+  baseURL: isNest
+    ? process.env.NEXT_PUBLIC_API_BASE_URL_NEST
+    : process.env.NEXT_PUBLIC_API_BASE_URL || "",
   headers: {
     "Content-Type": "application/json",
   },
