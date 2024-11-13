@@ -1,3 +1,4 @@
+"use client";
 import { Plus, Trash2 } from "lucide-react";
 import { Spin, message } from "antd";
 import classNames from "classnames";
@@ -13,46 +14,40 @@ import { setSelectedChat, setUserChats } from "@/app/store/slice/chatsSlice";
 // import { useIsLogedIn } from '@/app/admin/hooks/useIsLogedIn';
 import { useSession } from "next-auth/react";
 import { useIsLogedIn } from "@/hooks/useIsLogedIn";
+import { getUserDataFromLocalStorage } from "@/lib/auth";
+import { URL } from "@/app/constants/apiEndpoints";
+import Axios from "@/app/utils/axiosInstance";
 
 const deleteChatAPI = async (chatId: string) => {
-  const res = await fetch(`/api/chats`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ chatId }),
+  const res = await Axios.delete(URL.DELETE_CHAT, {
+    // body: JSON.stringify({ chatId }),
+    data: { chatId },
   });
 
-  if (!res.ok) {
+  if (!res.status) {
     throw new Error("Failed to delete chat");
   }
 
-  return await res.json();
+  return await res.data;
 };
-export const getAllChatsByUserId = async (userId: string) => {
-  const res = await fetch(`/api/chats?userId=${userId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+const getAllChatsByUserId = async (userId: string) => {
+  const res = await Axios.get(`${URL.GET_CHATS + userId}`);
 
-  if (!res.ok) {
+  if (!res.status) {
     throw new Error("Failed to fetch chats");
   }
 
-  return res.json();
+  return res;
 };
 const Sidebar = () => {
   const logedIn = useIsLogedIn();
   const { data: session, status } = useSession();
-
+  const userData = getUserDataFromLocalStorage();
   const dispatch: AppDispatch = useDispatch();
 
   const [hoveredChatId, setHoveredChatId] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
-
   const [loadingChatDelete, setLoadingChatDelete] = useState<boolean>(false);
 
   // const { loggedInUserData } = usersGlobalStore() as any;
@@ -67,13 +62,15 @@ const Sidebar = () => {
   // console.log(userChats, 'userChatsuserChats');
   // console.log(selectedChat, 'selectedChatselectedChat');
   const getAllChatsOfAuthenticatedUser = async () => {
-    console.log(session?.user.id, "dfdfdfdfdfd");
     try {
       setLoading(true);
 
-      const response = await getAllChatsByUserId(session?.user.id);
+      const response = await getAllChatsByUserId(
+        session?.user.id ?? userData.id
+      );
+      console.log(response, "3939399");
 
-      if (response.success) {
+      if (response.status) {
         dispatch(setUserChats(response.data || []));
 
         // setUserChats(response.data);

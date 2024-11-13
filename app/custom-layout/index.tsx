@@ -18,14 +18,11 @@ function CustomLayout({ children }: { children: React.ReactNode }) {
   const loggedInUserData = useSelector((state: RootState) => state.user.user);
   const userLoging = useSelector((state: RootState) => state.user.loading);
   const [loading, setLoading] = useState(false);
-
   // Function to get the logged-in user data
   const getLoggedInUser = async () => {
     try {
       setLoading(true);
-      // const response = await FetchUserData();
       if (loggedInUserData) {
-        console.log(session, "sessionsessionsession");
         dispatch(setLoggedInUserData(loggedInUserData));
       } else {
         message.error("Something dfdfd went wrong! Please try again later.");
@@ -48,7 +45,6 @@ function CustomLayout({ children }: { children: React.ReactNode }) {
       getLoggedInUser();
     }
   }, [pathname, userLoging]);
-  console.log(userLoging, "userLoging");
   if (loading) {
     return (
       <div className="flex h-screen justify-center items-center bg-chatareacolor">
@@ -56,13 +52,13 @@ function CustomLayout({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-  if (
-    !session?.user &&
-    !pathname.includes("/sign-in") &&
-    !pathname.includes("/sign-up")
-  ) {
-    return null; // Optionally handle the case where no user data is available
-  }
+  // if (
+  //   !session?.user &&
+  //   !pathname.includes("/sign-in") &&
+  //   !pathname.includes("/sign-up")
+  // ) {
+  //   return null; // Optionally handle the case where no user data is available
+  // }
 
   return <>{children}</>;
 }

@@ -9,6 +9,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
+import { URL } from "@/app/constants/apiEndpoints";
 
 import {
   Form,
@@ -22,6 +23,7 @@ import { cn } from "@/lib/utils";
 // import { Editor } from "@/components/editor";
 import { Preview } from "@/components/preview";
 import { Editor } from "@/components/editor";
+import Axios from "@/app/utils/axiosInstance";
 
 interface ChapterDescriptionFormProps {
   initialData: Chapter;
@@ -55,8 +57,8 @@ export const ChapterDescriptionForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(
-        `/api/courses/${courseId}/chapters/${chapterId}`,
+      await Axios.patch(
+        `${URL.UPDATE_COURSE + courseId + URL.CHAPTERS + chapterId}`,
         values
       );
       toast.success("Chapter updated");

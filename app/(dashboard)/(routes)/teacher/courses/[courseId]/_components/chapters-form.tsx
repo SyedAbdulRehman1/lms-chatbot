@@ -77,9 +77,12 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
     try {
       setIsUpdating(true);
 
-      await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
-        list: updateData,
-      });
+      await Axios.put(
+        `${URL.UPDATE_COURSE + courseId + URL.CHAPTERS + URL.REORDER}`,
+        {
+          list: updateData,
+        }
+      );
       toast.success("Chapters reordered");
       router.refresh();
     } catch {

@@ -1,5 +1,6 @@
 // import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+"use client";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
 
@@ -15,6 +16,10 @@ import { ChapterActions } from "./_components/chapter-actions";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 import { NextResponse } from "next/server";
+import { use, useEffect, useState } from "react";
+import Axios from "@/app/utils/axiosInstance";
+import { URL } from "@/app/constants/apiEndpoints";
+// import { useRouter } from "next/router";
 
 // const ChapterIdPage = async ({
 //   params,
@@ -28,43 +33,88 @@ interface ChapterIdPageProps {
   }>;
 }
 
-const ChapterIdPage = async ({ params }: ChapterIdPageProps) => {
+type Params = Promise<{ courseId: string; chapterId: string }>;
+
+const ChapterIdPage = (props: { params: Params }) => {
+  // const { courseId } =React.use(params);
+  let params = use(props.params);
+  const courseId = params.courseId;
+  const chapterId = params.chapterId;
+  // const ChapterIdPage = ({ params }: ChapterIdPageProps) => {
   // Await the resolution of params
-  const resolvedParams = await params;
-  const { courseId, chapterId } = resolvedParams;
+  // const resolvedParams = await params;
+  // const { courseId, chapterId } = resolvedParams;
 
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user) {
-    return new NextResponse("Unauthorized", { status: 401 });
-  }
-  // const { userId } = auth();
-  const userId = session.user.id;
-  if (!userId) {
-    return redirect("/");
-  }
+  // const session = await getServerSession(authOptions);
+  // if (!session || !session.user) {
+  //   return new NextResponse("Unauthorized", { status: 401 });
+  // }
 
-  const chapter = await db.chapter.findUnique({
-    where: {
-      id: chapterId,
-      courseId: courseId,
-    },
-    include: {
-      muxData: true,
-    },
-  });
+  // const { courseId, chapterId } = await params;
+  const [chapterData, setChapterData] = useState(null);
+  const router = useRouter();
 
-  if (!chapter) {
-    return redirect("/");
-  }
+  useEffect(() => {
+    const fetchChapter = async () => {
+      try {
+        // const res = await Axios.get(
+        //   `/api/courses/${courseId}/chapters/${chapterId}`
+        // );
+        const res = await Axios.get(
+          `${URL.GET_CHAPTER + courseId + URL.CHAPTERS + chapterId}`
+        );
 
-  const requiredFields = [chapter.title, chapter.description, chapter.videoUrl];
+        if (res.status === 401) {
+          router.push("/login");
+          return;
+        }
+        if (res.status === 404) {
+          router.push("/not-found");
+          return;
+        }
+        const data = await res.data;
+        setChapterData(data);
+      } catch (error) {
+        console.error("Error fetching chapter:", error);
+        router.push("/error");
+      }
+    };
 
-  const totalFields = requiredFields.length;
-  const completedFields = requiredFields.filter(Boolean).length;
+    fetchChapter();
+  }, [courseId, chapterId, router]);
 
-  const completionText = `(${completedFields}/${totalFields})`;
+  if (!chapterData) return <div>Loading...</div>;
 
-  const isComplete = requiredFields.every(Boolean);
+  const { chapter, completionText, isComplete } = chapterData;
+
+  // // const { userId } = auth();
+  // const userId = session.user.id;
+  // if (!userId) {
+  //   return redirect("/");
+  // }
+
+  // const chapter = await db.chapter.findUnique({
+  //   where: {
+  //     id: chapterId,
+  //     courseId: courseId,
+  //   },
+  //   include: {
+  //     muxData: true,
+  //   },
+  // });
+
+  // if (!chapter) {
+  //   return redirect("/");
+  // }
+
+  // const requiredFields = [chapter.title, chapter.description, chapter.videoUrl];
+
+  // const totalFields = requiredFields.length;
+  // const completedFields = requiredFields.filter(Boolean).length;
+
+  // const completionText = `(${completedFields}/${totalFields})`;
+
+  // const isComplete = requiredFields.every(Boolean);
 
   return (
     <>

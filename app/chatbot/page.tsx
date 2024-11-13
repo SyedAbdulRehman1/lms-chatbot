@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
 import ChatArea from "@/_components/ChatArea";
 import Sidebar from "@/_components/Sidebar";
 
 const Page = () => {
-  return <div className="h-screen flex">
+  return (
+    <div className="h-screen flex">
+      <div className="hidden lg:flex">
+        <Sidebar />
+      </div>
 
-    <div className="hidden lg:flex">
-      <Sidebar />
+      <ChatArea />
     </div>
-
-    <ChatArea />
-
-  </div>;
+  );
 };
 
 export default Page;

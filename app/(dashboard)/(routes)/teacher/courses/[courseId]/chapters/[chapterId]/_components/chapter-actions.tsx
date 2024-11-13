@@ -8,19 +8,21 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
+import { URL } from "@/app/constants/apiEndpoints";
+import Axios from "@/app/utils/axiosInstance";
 
 interface ChapterActionsProps {
   disabled: boolean;
   courseId: string;
   chapterId: string;
   isPublished: boolean;
-};
+}
 
 export const ChapterActions = ({
   disabled,
   courseId,
   chapterId,
-  isPublished
+  isPublished,
 }: ChapterActionsProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -30,10 +32,26 @@ export const ChapterActions = ({
       setIsLoading(true);
 
       if (isPublished) {
-        await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
+        await Axios.patch(
+          `${
+            URL.UPDATE_COURSE +
+            courseId +
+            URL.CHAPTERS +
+            chapterId +
+            URL.UN_PUBLISH
+          }`
+        );
         toast.success("Chapter unpublished");
       } else {
-        await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
+        await Axios.patch(
+          `${
+            URL.UPDATE_COURSE +
+            courseId +
+            URL.CHAPTERS +
+            chapterId +
+            URL.PUBLISH
+          }`
+        );
         toast.success("Chapter published");
       }
 
@@ -43,13 +61,15 @@ export const ChapterActions = ({
     } finally {
       setIsLoading(false);
     }
-  }
-  
+  };
+
   const onDelete = async () => {
     try {
       setIsLoading(true);
 
-      await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
+      await axios.delete(
+        `${URL.UPDATE_COURSE + courseId + URL.CHAPTERS + chapterId}`
+      );
 
       toast.success("Chapter deleted");
       router.refresh();
@@ -59,7 +79,7 @@ export const ChapterActions = ({
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex items-center gap-x-2">
@@ -77,5 +97,5 @@ export const ChapterActions = ({
         </Button>
       </ConfirmModal>
     </div>
-  )
-}
+  );
+};

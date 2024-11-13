@@ -1,24 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { UserButton } from "@clerk/nextjs";
 import { Menu, Send, Loader } from "lucide-react";
 import { Drawer, message } from "antd";
 import { useChat } from "ai/react";
 
 import Sidebar from "./Sidebar";
 import Messages from "./Messages";
-// import { createNewChat, updateChat } from './../../actions/chats';
-// import chatsGlobalStore from "@/store/chats-store";
-// import usersGlobalStore from "@/store/users-store";
-// import { createNewChat, updateChat } from "@/app/lib/chats";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store/store";
 import { setSelectedChat, setUserChats } from "@/app/store/slice/chatsSlice";
-// import { FetchUserData } from "@/lib/fetchUserData";
 import { useSession } from "next-auth/react";
-// import { AppDispatch, RootState } from "@/store/store";
-// import { setSelectedChat, setUserChats } from "@/store/slice/chatsSlice";
+import Axios from "@/app/utils/axiosInstance";
+import { URL } from "@/app/constants/apiEndpoints";
+import { getUserDataFromLocalStorage } from "@/lib/auth";
 const ChatArea = () => {
   const { data: session, status } = useSession();
 
@@ -38,13 +33,12 @@ const ChatArea = () => {
     api: "/api/chat",
     initialMessages: [],
   });
-
-  // const { selectedChat, setSelectedChat, userChats, setUserChats }: any = chatsGlobalStore();
   const selectedChat = useSelector(
     (state: RootState) => state.chats.selectedChat
   );
   const userChats = useSelector((state: RootState) => state.chats.userChats);
   const dispatch: AppDispatch = useDispatch();
+  const userData = getUserDataFromLocalStorage();
 
   // const { loggedInUserData }: any = usersGlobalStore();
   const loggedInUserData = useSelector((state: RootState) => state.user.user);
@@ -54,54 +48,46 @@ const ChatArea = () => {
     messages: any[];
     title: string;
   }) => {
-    const res = await fetch("/api/chats", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(chatData),
-    });
+    console.log("Attempting to create new chat with data:", chatData);
+    try {
+      const res = await Axios.post(URL.CREATE_CHAT, chatData);
+      console.log("API response:", res);
 
-    if (!res.ok) {
-      throw new Error("Failed to create chat");
+      if (res.status < 200 || res.status >= 300) {
+        throw new Error("Failed to create chat");
+      }
+
+      return res.data;
+    } catch (error) {
+      console.error("Error creating new chat:", error);
+      throw error;
     }
-
-    return await res.json();
-  };
-
-  const updateChatAPI = async (chatId: string, messagesArray: any[]) => {
-    const res = await fetch(`/api/chats`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ chatId, messagesArray }),
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to update chat");
-    }
-
-    return await res.json();
   };
 
   const createOrUpdateChat = async () => {
     try {
+      console.log("Selected chat:", selectedChat);
+      console.log("User ID:", userData.id);
+
       if (!selectedChat) {
+        console.log("Creating a new chat...");
         const response = await createNewChatAPI({
-          user: session!.user.id,
+          user: session?.user.id ?? userData.id,
           messages: messages,
-          title: messages[0].content,
+          title: messages[0]?.content || "Untitled",
         });
+
+        console.log("New chat created:", response);
 
         if (response?.success) {
           dispatch(setSelectedChat(response?.data));
-
           dispatch(setUserChats([response?.data, ...userChats]));
         }
       } else {
-        // await updateChatAPI({ chatId: selectedChat?.id, messagesArray: messages });
+        console.log("Updating existing chat...");
         const response = await updateChatAPI(selectedChat.id, messages);
+
+        console.log("Updated chat response:", response);
 
         const updatedChats = userChats.map((chat: any) =>
           chat.id === selectedChat.id ? { ...chat, messages } : chat
@@ -109,12 +95,58 @@ const ChatArea = () => {
 
         dispatch(setUserChats(updatedChats));
       }
-    } catch (error: any) {
+    } catch (error) {
       message.error("Something went wrong! Please try again!");
+      console.error("Error in createOrUpdateChat:", error);
     }
   };
 
+  const updateChatAPI = async (chatId: string, messagesArray: any[]) => {
+    const res = await Axios.put(URL.CREATE_CHAT, {
+      body: JSON.stringify({ chatId, messagesArray }),
+    });
+
+    if (!res.status) {
+      throw new Error("Failed to update chat");
+    }
+
+    return await res.data;
+  };
+
+  // const createOrUpdateChat = async () => {
+  //   try {
+  //     console.log(selectedChat, "++++++++++");
+  //     console.log(userData.id, "------------");
+  //     if (!selectedChat) {
+  //       console.log("inside");
+  //       const response = createNewChatAPI({
+  //         user: session!.user.id ?? userData.id,
+  //         messages: messages,
+  //         title: messages[0].content,
+  //       });
+  //       console.log(response, "03okldkfldk");
+  //       // if (response?.success) {
+  //       //   dispatch(setSelectedChat(response?.data));
+
+  //       //   dispatch(setUserChats([response?.data, ...userChats]));
+  //       // }
+  //     } else {
+  //       // await updateChatAPI({ chatId: selectedChat?.id, messagesArray: messages });
+  //       const response = await updateChatAPI(selectedChat.id, messages);
+
+  //       const updatedChats = userChats.map((chat: any) =>
+  //         chat.id === selectedChat.id ? { ...chat, messages } : chat
+  //       );
+
+  //       dispatch(setUserChats(updatedChats));
+  //     }
+  //   } catch (error: any) {
+  //     message.error(error + "Something went wrong! Please try again!");
+  //   }
+  // };
+
   useEffect(() => {
+    console.log(messages, "000090mesage");
     if (messages.length > 0) {
       createOrUpdateChat();
     }

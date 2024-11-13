@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // To handle redirect
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
@@ -9,6 +9,8 @@ import { Categories } from "./_components/categories";
 // import { fetchCategoriesAndCourses } from "./fetchCategoriesAndCourses";
 import { Spin } from "antd";
 import axios from "axios";
+import { URL } from "@/app/constants/apiEndpoints";
+import Axios from "@/app/utils/axiosInstance";
 // import { fetchCategoriesAndCourses } from "@/lib/server-functions"; // Server-side function
 
 // interface SearchPageProps {
@@ -19,15 +21,21 @@ import axios from "axios";
 // }
 
 // const SearchPage = ({ searchParams }: SearchPageProps) => {
-  interface SearchPageProps {
-    searchParams: Promise<{
-      title: string;
-      categoryId: string;
-    }>;
-  }
-  
-  const SearchPage =  ({ searchParams }: SearchPageProps) => {
-  
+interface SearchPageProps {
+  searchParams: Promise<{
+    title: string;
+    categoryId: string;
+  }>;
+}
+
+type Params = Promise<{ searchParams: string }>;
+
+const SearchPage = (props: { params: Params }) => {
+  // const { courseId } =React.use(params);
+  let params = use(props.params);
+  const searchParams = params.searchParams;
+
+  // const SearchPage = ({ searchParams }: SearchPageProps) => {
   const router = useRouter();
   const loggedInUserData = useSelector((state: RootState) => state.user.user);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
@@ -49,7 +57,7 @@ import axios from "axios";
         //   loggedInUserData.id,
         //   searchParams
         // );
-        const response = await axios.get("/api/categories-and-courses", {
+        const response = await Axios.get(URL.CATEGORIES_AND_COURSES, {
           params: searchParams,
         });
         const data = response.data;

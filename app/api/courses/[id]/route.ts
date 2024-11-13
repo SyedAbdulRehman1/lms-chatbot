@@ -3,6 +3,7 @@ import { isUserType } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { UseIsTeacher } from "@/lib/teacher";
 import { getServerSession } from "next-auth/next";
+// import { getServerSession } from "next-auth/next";
 // import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
@@ -11,16 +12,18 @@ import { NextResponse } from "next/server";
 //   req: Request,
 //   { params }: { params: { id: string } }
 // ) {
-  export async function GET(
-    req: Request,
-    { params }: { params: Promise<{ id: string }> }
-  ) {
-    // Await the resolution of params
-    const resolvedParams = await params;
-    const { id } = resolvedParams;
-  
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  // console.log(req, "399999999999");
+  // Await the resolution of params
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+
   const url = new URL(req.url);
   const session = await getServerSession(authOptions);
+  // console.log(session, "df343434`");
   if (!session || !session.user) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
@@ -57,15 +60,14 @@ import { NextResponse } from "next/server";
 //   req: Request,
 //   { params }: { params: { id: string } }
 // ) {
-  export async function PATCH(
-    req: Request,
-    { params }: { params: Promise<{ id: string }> }
-  ) {
-    // Await the resolution of params
-    const resolvedParams = await params;
-    const { id } = resolvedParams;
-  
-  
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  // Await the resolution of params
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+
   // const url = new URL(req.url);
   // const userId = url.searchParams.get("userId");
 

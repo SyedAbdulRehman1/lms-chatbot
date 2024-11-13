@@ -21,6 +21,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { formatPrice } from "@/lib/format";
+import Axios from "@/app/utils/axiosInstance";
+import { URL } from "@/app/constants/apiEndpoints";
 
 interface PriceFormProps {
   initialData: Course;
@@ -49,7 +51,7 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
+      await Axios.patch(`${URL.UPDATE_COURSE + courseId}`, values);
       toast.success("Course updated");
       toggleEdit();
       router.refresh();

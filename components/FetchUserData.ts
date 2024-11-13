@@ -19,7 +19,6 @@ export default function FetchUserData() {
       if (accessToken) {
         try {
           const decodedUser = await DecodeToken(accessToken);
-          console.log(decodedUser, "ddd");
           dispatch(setLoggedInUserData(decodedUser));
           localStorage.setItem("user", JSON.stringify(decodedUser));
         } catch (error) {
