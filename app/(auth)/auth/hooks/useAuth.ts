@@ -3,12 +3,16 @@ import { getSession, signIn } from "next-auth/react";
 import { FieldValues } from "react-hook-form";
 import { redirect, useRouter } from "next/navigation";
 // import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 
 import { Method, makeRequest } from "@/app/utils/fetch";
 import { setLoggedInUserData } from "@/app/store/userSlice";
 import { useDispatch } from "react-redux";
 import { message } from "antd";
 import { ApiResponse } from "@/app/Interface/ApiResponse";
+import { URL } from "@/app/constants/apiEndpoints";
+import Axios from "@/app/utils/axiosInstance";
+import { DecodeToken } from "@/app/utils/decodeToken";
 // import { useDispatch } from "react-redux";
 // import { setLoggedInUserData } from "@/app/store/userSlice";
 // import { encodeToken } from '@/app/utils/jwtService';
@@ -80,17 +84,21 @@ export const useAuth = (errorCb?: ErrorCb) => {
   const register = async (data: FieldValues) => {
     setLoading(true);
     try {
-      const res = await makeRequest<ApiResponse<any>>(
-        "/api/auth/register",
-        Method.POST,
-        data
-      );
+      const res = await Axios.post(URL.REGISTER_USER, data);
       setLoading(false);
       console.log(res, "resssssssssss");
-      return res;
+      return res.data;
+      // const res = await makeRequest<ApiResponse<any>>(
+      //   URL.REGISTER_USER,
+      //   Method.POST,
+      //   data
+      // );
+      // setLoading(false);
+      // console.log(res, "resssssssssss");
+      // return res;
     } catch (error) {
       setLoading(false);
-      throw error; // You can handle error formatting here if needed
+      throw error;
     }
   };
 
@@ -144,53 +152,74 @@ export const useAuth = (errorCb?: ErrorCb) => {
   // };
   const signin = async (data: FieldValues, errorCb: any) => {
     setLoading(true);
+    const apiBaseUrl =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+    const isNest = process.env.NEXT_PUBLIC_API_BACKEND === "true";
+
     try {
-      console.log(data, "Dataaa");
-      const result = await signIn("credentials", {
-        ...data,
-        redirect: false,
-      });
-      console.log(result, "reeddf");
-      if (result?.error) {
-        switch (result.error) {
-          case "email":
-            message.error("The provided credentials do not match our records.");
-            errorCb("email", {
-              message: "The provided credentials do not match our records.",
-            });
-            break;
-          case "user_not_found":
-            message.error("User not found. Please check your email.");
-            errorCb("email", {
-              message: "User not found. Please check your email.",
-            });
-            break;
-          case "not_confirmed":
-            message.error(
-              "Please verify your email address before proceeding."
-            );
-            // errorCb("email", {
-            //   message: "Please verify your email address before proceeding.",
-            // });
-            break;
-          default:
-            message.error("An unexpected error occurred.");
-            errorCb("generic", { message: "An unexpected error occurred." });
-            break;
+      let result;
+      if (isNest) {
+        const loginResponse = await Axios.post(URL.LOGIN_USER, data);
+        console.log(loginResponse, "result from NestJS login");
+        if (loginResponse.data?.accessToken) {
+          let user = await DecodeToken(loginResponse.data?.accessToken);
+          console.log(user, "userrr");
+          await dispatch(setLoggedInUserData(user));
+
+          return { accessToken: loginResponse.data.accessToken }; // Make sure you're returning the token here
+        } else {
+          console.error("No access token in the response");
+          return { accessToken: null }; // Return null if no access token
         }
-      } else if (result?.ok) {
-        const session = await getSession();
-        if (session) {
-          const user = session.user;
-          if (user) {
-            console.log(user, "ttt");
-            await dispatch(setLoggedInUserData(user));
-            message.success("Login successful!");
+      } else {
+        result = await signIn("credentials", {
+          ...data,
+          redirect: false,
+        });
+        console.log(result, "reeddf");
+        if (result?.error) {
+          switch (result.error) {
+            case "email":
+              message.error(
+                "The provided credentials do not match our records."
+              );
+              errorCb("email", {
+                message: "The provided credentials do not match our records.",
+              });
+              break;
+            case "user_not_found":
+              message.error("User not found. Please check your email.");
+              errorCb("email", {
+                message: "User not found. Please check your email.",
+              });
+              break;
+            case "not_confirmed":
+              message.error(
+                "Please verify your email address before proceeding."
+              );
+              // errorCb("email", {
+              //   message: "Please verify your email address before proceeding.",
+              // });
+              break;
+            default:
+              message.error("An unexpected error occurred.");
+              errorCb("generic", { message: "An unexpected error occurred." });
+              break;
           }
-          router.push("/chatbot");
+        } else if (result?.ok) {
+          const session = await getSession();
+          if (session) {
+            const user = session.user;
+            if (user) {
+              console.log(user, "ttt");
+              await dispatch(setLoggedInUserData(user));
+              message.success("Login successful!");
+            }
+            // router.push("/chatbot");
+          }
         }
+        return result;
       }
-      return result;
     } catch (error) {
       // Handle generic errors
       errorCb &&

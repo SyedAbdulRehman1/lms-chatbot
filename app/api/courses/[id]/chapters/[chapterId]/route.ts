@@ -1,20 +1,43 @@
-import Mux from "@mux/mux-node";
+// import Mux from "@mux/mux-node";
 // import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-
+// import mux from "@/lib/mux"; // Import the Mux configuration
+// import mux from "@/lib/mux"
 import { db } from "@/lib/db";
+import Mux from '@mux/mux-node';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 
-const { Video } = new Mux(
-  process.env.MUX_TOKEN_ID!,
-  process.env.MUX_TOKEN_SECRET!
-);
+const { MUX_TOKEN_ID, MUX_TOKEN_SECRET } = process.env; 
+const mux = new Mux({
+  tokenId:MUX_TOKEN_ID,
+  tokenSecret:MUX_TOKEN_SECRET,
+  // : MUX_TOKEN_ID,
+  // secret: MUX_TOKEN_SECRET,
+});
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { courseId: string; chapterId: string } }
-) {
+const video = mux.video;  // Assign Video for easier reference
+
+// module.exports = mux;
+
+// const { Video } = new Mux(
+//   process.env.MUX_TOKEN_ID!,
+//   process.env.MUX_TOKEN_SECRET!
+// );
+
+// export async function DELETE(
+//   req: Request,
+//   { params }: { params: { courseId: string; chapterId: string } }
+// ) {
+  export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ courseId: string; chapterId: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { courseId, chapterId } = resolvedParams;
+  
+  
   try {
     // const { userId } = auth();
     const session = await getServerSession(authOptions);
@@ -30,7 +53,7 @@ export async function DELETE(
 
     const ownCourse = await db.course.findUnique({
       where: {
-        id: params.courseId,
+        id: courseId,
         userId,
       },
     });
@@ -41,8 +64,8 @@ export async function DELETE(
 
     const chapter = await db.chapter.findUnique({
       where: {
-        id: params.chapterId,
-        courseId: params.courseId,
+        id: chapterId,
+        courseId: courseId,
       },
     });
 
@@ -53,12 +76,12 @@ export async function DELETE(
     if (chapter.videoUrl) {
       const existingMuxData = await db.muxData.findFirst({
         where: {
-          chapterId: params.chapterId,
+          chapterId: chapterId,
         },
       });
 
       if (existingMuxData) {
-        await Video.Assets.del(existingMuxData.assetId);
+        // await Video.Assets.del(existingMuxData.assetId);
         await db.muxData.delete({
           where: {
             id: existingMuxData.id,
@@ -69,13 +92,13 @@ export async function DELETE(
 
     const deletedChapter = await db.chapter.delete({
       where: {
-        id: params.chapterId,
+        id: chapterId,
       },
     });
 
     const publishedChaptersInCourse = await db.chapter.findMany({
       where: {
-        courseId: params.courseId,
+        courseId: courseId,
         isPublished: true,
       },
     });
@@ -83,7 +106,7 @@ export async function DELETE(
     if (!publishedChaptersInCourse.length) {
       await db.course.update({
         where: {
-          id: params.courseId,
+          id: courseId,
         },
         data: {
           isPublished: false,
@@ -98,10 +121,19 @@ export async function DELETE(
   }
 }
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string; chapterId: string } }
-) {
+// export async function PATCH(
+//   req: Request,
+//   { params }: { params: { id: string; chapterId: string } }
+// ) {
+  export async function PATCH(
+    req: Request,
+    { params }: { params: Promise<{ id: string; chapterId: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id, chapterId } = resolvedParams;
+  
+  
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
@@ -119,7 +151,7 @@ export async function PATCH(
 
     const ownCourse = await db.course.findUnique({
       where: {
-        id: params.id,
+        id: id,
         userId,
       },
     });
@@ -131,8 +163,8 @@ export async function PATCH(
 
     const chapter = await db.chapter.update({
       where: {
-        id: params.chapterId,
-        courseId: params.id,
+        id: chapterId,
+        courseId: id,
       },
       data: {
         ...values,
@@ -142,28 +174,35 @@ export async function PATCH(
     if (values.videoUrl) {
       const existingMuxData = await db.muxData.findFirst({
         where: {
-          chapterId: params.chapterId,
+          chapterId: chapterId,
         },
       });
 
       if (existingMuxData) {
-        await Video.Assets.del(existingMuxData.assetId);
+        // await Video.Assets.del(existingMuxData.assetId);
         await db.muxData.delete({
           where: {
             id: existingMuxData.id,
           },
         });
       }
+      // const asset  = await mux..create({
+      //   input: values.videoUrl, // Use the file stream for upload
+      //   playback_policy: "public", // Set playback policy
+      //   test: false,
 
-      const asset = await Video.Assets.create({
+      // });
+  
+      const asset = await video.assets.create({
         input: values.videoUrl,
-        playback_policy: "public",
+        playback_policy:["public"],
+        // playback_policy: "public",
         test: false,
       });
 
       await db.muxData.create({
         data: {
-          chapterId: params.chapterId,
+          chapterId: chapterId,
           assetId: asset.id,
           playbackId: asset.playback_ids?.[0]?.id,
         },

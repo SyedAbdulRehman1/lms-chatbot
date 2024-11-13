@@ -1,14 +1,29 @@
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/utils/authOptions";
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { courseId: string; chapterId: string } }
-) {
+// export async function PUT(
+//   req: Request,
+//   { params }: { params: { courseId: string; chapterId: string } }
+// ) {
+  export async function PUT(
+    req: Request,
+    { params }: { params: Promise<{ courseId: string; chapterId: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { courseId, chapterId } = resolvedParams;
+  
   try {
-    const { userId } = auth();
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userId = session.user.id;
+    const user = session.user;    
     const { isCompleted } = await req.json();
 
     if (!userId) {
@@ -19,7 +34,7 @@ export async function PUT(
       where: {
         userId_chapterId: {
           userId,
-          chapterId: params.chapterId,
+          chapterId: chapterId,
         }
       },
       update: {
@@ -27,7 +42,7 @@ export async function PUT(
       },
       create: {
         userId,
-        chapterId: params.chapterId,
+        chapterId: chapterId,
         isCompleted,
       }
     })

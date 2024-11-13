@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Inter } from "next/font/google";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "./store/store";
@@ -10,36 +9,20 @@ import { ToastProvider } from "@/components/providers/toaster-provider";
 import { ConfettiProvider } from "@/components/providers/confetti-provider";
 import { AuthContext } from "@/context/AutxContext";
 import axios from "axios";
+import FetchUserData from "@/components/FetchUserData";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-// Custom component to fetch user data
-export const FetchUserData = () => {
-  const dispatch = useDispatch();
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      dispatch(setLoading(true));
-      const session = await getSession();
-      if (session?.user) {
-        dispatch(setLoggedInUserData(session.user));
-        localStorage.setItem("user", JSON.stringify(session.user)); // Storing the entire user object
-      }
-      dispatch(setLoading(false));
-    };
+import "../css/style.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "./lib/animate/animate.min.css";
+import "./lib/owlcarousel/assets/owl.carousel.min.css";
 
-    fetchUserData();
-  }, [dispatch]);
-  useEffect(() => {
-    axios
-      .get("/api/initTeacherUser")
-      .then((response) => {
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.error("Failed to initialize teacher user:", error);
-      });
-  }, []);
-  return null;
-};
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,16 +31,25 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useEffect(() => {
+    require("bootstrap/dist/js/bootstrap.bundle.min.js");
+  }, []);
+
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* <link href="css/style.css" rel="stylesheet"> */}
+
         <Provider store={store}>
-          <FetchUserData />
-          <ConfettiProvider />
-          <AuthContext>
-            <ToastProvider />
-            {children}
-          </AuthContext>
+          <Suspense fallback={"<div>Loading</div>"}>
+            <FetchUserData />
+            <ConfettiProvider />
+            <AuthContext>
+              <ToastProvider />
+              {/* <Navbar /> */}
+              {children}
+            </AuthContext>
+          </Suspense>
         </Provider>
       </body>
     </html>

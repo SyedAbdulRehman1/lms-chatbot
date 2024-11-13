@@ -1,14 +1,22 @@
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// export async function PATCH(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+  export async function PATCH(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+  
   try {
     // const { userId } = auth();
 
@@ -23,7 +31,7 @@ export async function PATCH(
 
     const course = await db.course.findUnique({
       where: {
-        id: params.id,
+        id: id,
         userId,
       },
       include: {
@@ -55,7 +63,7 @@ export async function PATCH(
 
     const publishedCourse = await db.course.update({
       where: {
-        id: params.id,
+        id: id,
         userId,
       },
       data: {

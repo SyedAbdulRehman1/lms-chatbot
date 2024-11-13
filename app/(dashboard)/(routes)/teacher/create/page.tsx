@@ -21,6 +21,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import Axios from "@/app/utils/axiosInstance";
+import { URL } from "@/app/constants/apiEndpoints";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -45,7 +47,10 @@ const CreatePage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post("/api/courses", { ...values, userId });
+      const response = await Axios.post(URL.CREATE_COURSE, {
+        ...values,
+        userId,
+      });
       console.log(response, "respppp");
       router.push(`/teacher/courses/${response.data.id}`);
       toast.success("Course created");

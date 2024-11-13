@@ -22,6 +22,8 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import { URL } from "@/app/constants/apiEndpoints";
+import Axios from "@/app/utils/axiosInstance";
 
 interface DescriptionFormProps {
   initialData: Course;
@@ -38,6 +40,7 @@ export const DescriptionForm = ({
   initialData,
   courseId,
 }: DescriptionFormProps) => {
+  const isNest = process.env.NEXT_PUBLIC_API_BACKEND === "true";
   const [isEditing, setIsEditing] = useState(false);
   const loggedInUserData = useSelector((state: RootState) => state.user.user);
   const userId = loggedInUserData?.id;
@@ -57,7 +60,7 @@ export const DescriptionForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
+      await Axios.patch(`${URL.UPDATE_COURSE + courseId}`, values);
       toast.success("Course updated");
       toggleEdit();
       router.refresh();

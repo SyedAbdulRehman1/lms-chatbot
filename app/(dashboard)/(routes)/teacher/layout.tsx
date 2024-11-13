@@ -9,7 +9,6 @@ import { Spin } from "antd";
 const TeacherLayout = ({ children }: { children: React.ReactNode }) => {
   // Access logged-in user data from the Redux store
   const loggedInUserData = useSelector((state: RootState) => state.user.user);
-
   // Handle loading state
   if (!loggedInUserData) {
     return (

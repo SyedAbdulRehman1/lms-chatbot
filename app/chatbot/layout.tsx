@@ -1,7 +1,7 @@
-"use client";
+// "use client";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+// import { ClerkProvider } from "@clerk/nextjs";
 // import CustomLayout from "@/custom-layout";
 
 // import "../../css/bootstrap.min.css";

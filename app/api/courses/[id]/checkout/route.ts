@@ -7,10 +7,18 @@ import { stripe } from "@/lib/stripe";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/authOptions";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// export async function POST(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+  export async function POST(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
+    // Await the resolution of params
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+  
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -27,7 +35,7 @@ export async function POST(
 
     const course = await db.course.findUnique({
       where: {
-        id: params.id,
+        id: id,
         isPublished: true,
       },
     });
@@ -36,7 +44,7 @@ export async function POST(
       where: {
         userId_courseId: {
           userId: user.id,
-          courseId: params.id,
+          courseId: id,
         },
       },
     });
