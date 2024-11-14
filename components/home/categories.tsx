@@ -1,5 +1,6 @@
 // import "../img/carousel-1.jpg"
 import Image from "next/image";
+import Link from "next/link";
 export default function Categories() {
   return (
     <>
@@ -18,7 +19,7 @@ export default function Categories() {
                   className="col-lg-12 col-md-12 wow zoomIn"
                   data-wow-delay="0.1s"
                 >
-                  <a
+                  <Link
                     className="position-relative d-block overflow-hidden"
                     href="#"
                   >
@@ -36,15 +37,15 @@ export default function Categories() {
                       style={{ margin: "1px" }}
                     >
                       <h5 className="m-0">Web Design</h5>
-                      <small className="text-primary">49 Courses</small>
+                      <small className="text-primary">09 Courses</small>
                     </div>
-                  </a>
+                  </Link>
                 </div>
                 <div
                   className="col-lg-6 col-md-12 wow zoomIn"
                   data-wow-delay="0.3s"
                 >
-                  <a
+                  <Link
                     className="position-relative d-block overflow-hidden"
                     href="#"
                   >
@@ -63,15 +64,15 @@ export default function Categories() {
                       style={{ margin: "1px" }}
                     >
                       <h5 className="m-0">Graphic Design</h5>
-                      <small className="text-primary">49 Courses</small>
+                      <small className="text-primary">12 Courses</small>
                     </div>
-                  </a>
+                  </Link>
                 </div>
                 <div
                   className="col-lg-6 col-md-12 wow zoomIn"
                   data-wow-delay="0.5s"
                 >
-                  <a
+                  <Link
                     className="position-relative d-block overflow-hidden"
                     href="#"
                   >
@@ -97,9 +98,9 @@ export default function Categories() {
                       style={{ margin: "1px" }}
                     >
                       <h5 className="m-0">Video Editing</h5>
-                      <small className="text-primary">49 Courses</small>
+                      <small className="text-primary">19 Courses</small>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -108,7 +109,7 @@ export default function Categories() {
               data-wow-delay="0.7s"
               style={{ minHeight: "350px" }}
             >
-              <a
+              <Link
                 className="position-relative d-block h-100 overflow-hidden"
                 href="#"
               >
@@ -125,9 +126,9 @@ export default function Categories() {
                   style={{ margin: "1px" }}
                 >
                   <h5 className="m-0">Online Marketing</h5>
-                  <small className="text-primary">49 Courses</small>
+                  <small className="text-primary">17Courses</small>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

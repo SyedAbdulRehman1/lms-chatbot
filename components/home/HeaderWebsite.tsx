@@ -19,7 +19,7 @@ export default function Header() {
       >
         <h2 className="m-0 text-primary">
           <FontAwesomeIcon icon={faBook} className="me-3" />
-          eLEARNING
+          LMS
         </h2>
       </Link>
       <button
@@ -71,12 +71,12 @@ export default function Header() {
             Contact
           </Link>
         </div>
-        <Link href="/login"           className="btn btn-primary py-4 px-lg-5 items-center d-none d-lg-flex"
+        <Link
+          href="/login"
+          className="btn btn-primary py-4 px-lg-5 items-center d-none d-lg-flex"
         >
-
           Join Now<i className="fa fa-arrow-right ms-3"></i>
         </Link>
-
       </div>
     </nav>
   );

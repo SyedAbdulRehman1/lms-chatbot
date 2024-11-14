@@ -1,14 +1,16 @@
 // components/InstructorSlider.js
 "use client";
+import Link from 'next/link';
 import React from 'react';
 import Slider from 'react-slick';
+import Image from 'next/image'; // Import the Image component from Next.js
 
 const instructors = [
   { name: 'Instructor 1', designation: 'Expert', image: '/img/team-1.jpg' },
   { name: 'Instructor 2', designation: 'Expert', image: '/img/team-2.jpg' },
   { name: 'Instructor 3', designation: 'Expert', image: '/img/team-3.jpg' },
   { name: 'Instructor 4', designation: 'Expert', image: '/img/team-4.jpg' },
-];  
+];
 
 const InstructorSlider = () => {
   const settings = {
@@ -40,13 +42,19 @@ const InstructorSlider = () => {
           {instructors.map((instructor, index) => (
             <div key={index} className="team-item bg-light">
               <div className="overflow-hidden">
-                <img className="img-fluid" src={instructor.image} alt={instructor.name} />
+                <Image 
+                  className="img-fluid" 
+                  src={instructor.image} 
+                  alt={instructor.name} 
+                  width={300} // Replace with the actual width of your images
+                  height={300} // Replace with the actual height of your images
+                />
               </div>
               <div className="position-relative d-flex justify-content-center" style={{ marginTop: '-23px' }}>
                 <div className="bg-light d-flex justify-content-center pt-2 px-1">
-                  <a className="btn btn-sm-square btn-primary mx-1" href="#"><i className="fab fa-facebook-f"></i></a>
-                  <a className="btn btn-sm-square btn-primary mx-1" href="#"><i className="fab fa-twitter"></i></a>
-                  <a className="btn btn-sm-square btn-primary mx-1" href="#"><i className="fab fa-instagram"></i></a>
+                  <Link className="btn btn-sm-square btn-primary mx-1" href="#"><i className="fab fa-facebook-f"></i></Link>
+                  <Link className="btn btn-sm-square btn-primary mx-1" href="#"><i className="fab fa-twitter"></i></Link>
+                  <Link className="btn btn-sm-square btn-primary mx-1" href="#"><i className="fab fa-instagram"></i></Link>
                 </div>
               </div>
               <div className="text-center p-4">

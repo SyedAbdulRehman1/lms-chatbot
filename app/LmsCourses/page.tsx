@@ -1,31 +1,22 @@
 import AboutStart from "@/components/about/about-start";
 import AboutTopSection from "@/components/about/aboutUs";
-import Contactheader from "@/components/contact/contact-header";
-import Contactinfo from "@/components/contact/contact-info";
-import Contactnavbar from "@/components/contact/contact-navbar";
-import Contactsendusinfo from "@/components/contact/contact-send-us-info";
 import Footer from "@/components/Footer";
+import Courses from "@/components/home/courses";
 import Service from "@/components/home/service";
 import Team from "@/components/home/team";
 import Navbar from "@/components/navbar";
 import Head from "next/head";
 import Link from "next/link";
 
-export default function Contact() {
+export default function LmsCourses() {
   return (
     <div>
-      {/* <Contactnavbar /> */}
       <Navbar />
-      
-      {/* <AboutTopSection /> */}
-      <Contactheader />
-      {/* <Contactinfo /> */}
-      <Contactsendusinfo />
-
+      <AboutTopSection />
+      <Courses />
       {/* <Service />
       <AboutStart />
       <Team /> */}
-      
       <Footer />
       {/* Add other components here */}
 

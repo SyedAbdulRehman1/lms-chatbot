@@ -45,7 +45,7 @@ export default function Navbar() {
         className="navbar-brand d-flex align-items-center px-4 px-lg-5"
       >
         <h2 className="m-0 text-primary">
-          <i className="fa fa-book me-3"></i>eLEARNING
+          <i className="fa fa-book me-3"></i>LMS
         </h2>
       </a>
       <button
