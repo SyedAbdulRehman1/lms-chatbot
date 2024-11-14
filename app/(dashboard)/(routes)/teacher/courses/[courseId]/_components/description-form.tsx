@@ -44,6 +44,9 @@ export const DescriptionForm = ({
   const [isEditing, setIsEditing] = useState(false);
   const loggedInUserData = useSelector((state: RootState) => state.user.user);
   const userId = loggedInUserData?.id;
+  const [description, setDescription] = useState(
+    initialData?.description || ""
+  );
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -61,7 +64,10 @@ export const DescriptionForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await Axios.patch(`${URL.UPDATE_COURSE + courseId}`, values);
+      setDescription(values.description); // Update the local description
+
       toast.success("Course updated");
+
       toggleEdit();
       router.refresh();
     } catch {
@@ -91,7 +97,7 @@ export const DescriptionForm = ({
             !initialData.description && "text-slate-500 italic"
           )}
         >
-          {initialData.description || "No description"}
+          {description || "No description"}
         </p>
       )}
       {isEditing && (

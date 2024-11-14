@@ -31,6 +31,7 @@ export const ChapterVideoForm = ({
   chapterId,
 }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [videoUrl, setVideoUrl] = useState(initialData.videoUrl); // Track the video URL in the state
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -45,6 +46,7 @@ export const ChapterVideoForm = ({
       );
       toast.success("Chapter updated");
       toggleEdit();
+      setVideoUrl(values.videoUrl);
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -57,13 +59,13 @@ export const ChapterVideoForm = ({
         Chapter video
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing && <>Cancel</>}
-          {!isEditing && !initialData.videoUrl && (
+          {!isEditing && !videoUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
               Add a video
             </>
           )}
-          {!isEditing && initialData.videoUrl && (
+          {!isEditing && videoUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
               Edit video
@@ -72,13 +74,14 @@ export const ChapterVideoForm = ({
         </Button>
       </div>
       {!isEditing &&
-        (!initialData.videoUrl ? (
+        (!videoUrl ? (
           <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
             <Video className="h-10 w-10 text-slate-500" />
           </div>
         ) : (
           <div className="relative aspect-video mt-2">
             <MuxPlayer playbackId={initialData?.muxData?.playbackId || ""} />
+            {/* <MuxPlayer playbackId={videoUrl?.muxData?.playbackId || ""} /> */}
           </div>
         ))}
       {isEditing && (
@@ -96,7 +99,7 @@ export const ChapterVideoForm = ({
           </div>
         </div>
       )}
-      {initialData.videoUrl && !isEditing && (
+      {videoUrl && !isEditing && (
         <div className="text-xs text-muted-foreground mt-2">
           Videos can take a few minutes to process. Refresh the page if video
           does not appear.

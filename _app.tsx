@@ -4,7 +4,6 @@ import type { AppProps } from "next/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    console.log("dfdf");
     const checkSuperAdmin = async () => {
       try {
         await fetch("/api/checkSuperAdmin");

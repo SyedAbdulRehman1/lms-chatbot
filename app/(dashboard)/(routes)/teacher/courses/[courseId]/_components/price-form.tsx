@@ -35,6 +35,7 @@ const formSchema = z.object({
 
 export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [price, setPrice] = useState<number | null>(initialData?.price || null); // Initialize price as null
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -43,7 +44,8 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      price: initialData?.price || undefined,
+      // price: initialData?.price || undefined,
+      price: price, // Using local state for price
     },
   });
 
@@ -54,7 +56,8 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
       await Axios.patch(`${URL.UPDATE_COURSE + courseId}`, values);
       toast.success("Course updated");
       toggleEdit();
-      router.refresh();
+      setPrice(values.price);
+      // router.refresh();
     } catch {
       toast.error("Something went wrong");
     }
@@ -82,7 +85,9 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
             !initialData.price && "text-slate-500 italic"
           )}
         >
-          {initialData.price ? formatPrice(initialData.price) : "No price"}
+          {price ? formatPrice(price) : "No price"}
+
+          {/* {initialData.price ? formatPrice(initialData.price) : "No price"} */}
         </p>
       )}
       {isEditing && (

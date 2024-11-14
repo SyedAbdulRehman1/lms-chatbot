@@ -39,6 +39,7 @@ export const ChapterTitleForm = ({
   chapterId,
 }: ChapterTitleFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(initialData.title); // Local state for title
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -46,7 +47,8 @@ export const ChapterTitleForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    // defaultValues: initialData,
+    defaultValues: { title }, // Using local state for title
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -58,6 +60,7 @@ export const ChapterTitleForm = ({
         values
       );
       toast.success("Chapter updated");
+      setTitle(values.title);
       toggleEdit();
       router.refresh();
     } catch {
@@ -80,7 +83,9 @@ export const ChapterTitleForm = ({
           )}
         </Button>
       </div>
-      {!isEditing && <p className="text-sm mt-2">{initialData.title}</p>}
+      {/* {!isEditing && <p className="text-sm mt-2">{initialData.title}</p>} */}
+      {!isEditing && <p className="text-sm mt-2">{title}</p>}{" "}
+      {/* Use the updated title */}
       {isEditing && (
         <Form {...form}>
           <form
