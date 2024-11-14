@@ -215,7 +215,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
               await dispatch(setLoggedInUserData(user));
               message.success("Login successful!");
             }
-            // router.push("/chatbot");
+            router.push("/dashboard");
           }
         }
         return result;
