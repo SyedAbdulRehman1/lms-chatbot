@@ -97,7 +97,9 @@ export const useAuth = (errorCb?: ErrorCb) => {
       // console.log(res, "resssssssssss");
       // return res;
     } catch (error) {
+      console.log(error, "err");
       setLoading(false);
+      return error;
       throw error;
     }
   };
@@ -187,6 +189,12 @@ export const useAuth = (errorCb?: ErrorCb) => {
                 message: "The provided credentials do not match our records.",
               });
               break;
+            case "invalid_password": // Add case for password error
+              message.error("The password you entered is incorrect.");
+              errorCb("password", {
+                message: "The password you entered is incorrect.",
+              });
+              break;
             case "user_not_found":
               message.error("User not found. Please check your email.");
               errorCb("email", {
@@ -206,6 +214,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
               errorCb("generic", { message: "An unexpected error occurred." });
               break;
           }
+          return result;
         } else if (result?.ok) {
           const session = await getSession();
           if (session) {

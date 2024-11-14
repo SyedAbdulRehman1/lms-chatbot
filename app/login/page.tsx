@@ -50,14 +50,13 @@ export default function Login() {
         .required("Password is required"),
     }),
     onSubmit: async (values) => {
-      // try {
       const response = await registerUser(values);
-      console.log(response, "respppp");
-      if (response.success) {
-        toast.success(response.message!);
+      if (response.status == 400) {
+        toast.error(response.response.data.message ?? response.response.data!);
+      } else if (response.status == "success") {
+        toast.success(response.message);
       } else {
-        console.error("Error:", response.message);
-        toast.error(response.message!);
+        toast.success(response);
       }
       // } catch (error) {
       // console.error("Error:", error);
@@ -71,16 +70,17 @@ export default function Login() {
       email: "",
       password: "",
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      password: Yup.string().required("Password is required"),
-    }),
+    // validationSchema: Yup.object({
+    //   email: Yup.string()
+    //     .email("Invalid email address")
+    //     .required("Email is required"),
+    //   password: Yup.string().required("Password is required"),
+    // }),
     onSubmit: async (values) => {
       try {
         const resp = await signin(values, (field: any, error: any) => {
-          signInFormik.setFieldError(field, error.message);
+          console.log(error, "errro");
+          toast.error(error.message);
         });
         if (resp?.accessToken) {
           let user = await DecodeToken(resp?.accessToken);
@@ -90,10 +90,14 @@ export default function Login() {
             path: "/",
           });
           localStorage.setItem("accessToken", resp.accessToken);
-          router.push("/chatbot");
+          toast.success("Login Successfully !!");
+          router.push("/dashboard");
+        }
+        if (resp?.status == 200) {
+          toast.success("Login Successfully !!");
         }
         if (resp && resp.error === "not_confirmed") {
-          alert("Please verify your email address before proceeding.");
+          toast.error("Please verify your email address before proceeding");
           router.push(
             `/verify-email?email=${encodeURIComponent(values.email)}`
           ); // Redirect with email as a query parameter

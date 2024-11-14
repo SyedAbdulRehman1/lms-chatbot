@@ -1,6 +1,9 @@
 "use client";
 import Slider from "react-slick";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import Link from "next/link";
 
 export default function Carousel() {
   const settings = {
@@ -12,6 +15,8 @@ export default function Carousel() {
     autoplay: true,
     autoplaySpeed: 3000,
   };
+
+  const user = useSelector((state: RootState) => state.user.user);
 
   return (
     <div className="w-full overflow-hidden p-0 mb-5">
@@ -41,12 +46,27 @@ export default function Carousel() {
                   <p className="fs-5 text-white mb-4 pb-2">
                     Success at your doorstep
                   </p>
-                  <a href="#" className="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">
+                  <a
+                    href="/about"
+                    className="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft"
+                  >
                     Read More
                   </a>
-                  <a href="#" className="btn btn-light py-md-3 px-md-5 animated slideInRight">
-                    Join Now
-                  </a>
+                  {!user ? (
+                    <Link
+                      href="/login"
+                      className="btn btn-light py-md-3 px-md-5 animated slideInRight"
+                    >
+                      Join Now
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/contact"
+                      className="btn btn-light py-md-3 px-md-5 animated slideInRight"
+                    >
+                      Contact Us
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -78,12 +98,27 @@ export default function Carousel() {
                   <p className="fs-5 text-white mb-4 pb-2">
                     Success at your Doorstep
                   </p>
-                  <a href="#" className="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">
+                  <Link
+                    href="/about"
+                    className="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft"
+                  >
                     Read More
-                  </a>
-                  <a href="#" className="btn btn-light py-md-3 px-md-5 animated slideInRight">
-                    Join Now
-                  </a>
+                  </Link>
+                  {!user ? (
+                    <Link
+                      href="/login"
+                      className="btn btn-light py-md-3 px-md-5 animated slideInRight"
+                    >
+                      Join Now
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/contact"
+                      className="btn btn-light py-md-3 px-md-5 animated slideInRight"
+                    >
+                      Contact Us
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
