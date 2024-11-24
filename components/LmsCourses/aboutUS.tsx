@@ -1,5 +1,6 @@
 // import "../img/carousel-1.jpg"
 import Image from "next/image";
+import Link from "next/link";
 export default function AboutUs() {
   return (
     <>
