@@ -1,11 +1,12 @@
 "use client"; // Ensure this component is rendered on the client side
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"; // Import useSelector to access Redux store
 import { signOut } from "next-auth/react"; // Import signOut from next-auth
 import { RootState } from "@/app/store/store";
 import { clearUserData } from "@/app/store/userSlice";
 import Link from "next/link";
 import Image from "next/image";
+import UserUpdateModal from "./UserUpdateModal";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // State to handle avatar hover
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch user data from Redux store
   // const user = useSelector((state) => state); // Adjust the state path as needed
@@ -38,6 +40,16 @@ export default function Navbar() {
     // signOut({ callbackUrl: "/" }); // Redirect to home or login page after logout
   };
 
+  const handleUpdateUser = (updatedUser: any) => {
+    console.log("User updated:", updatedUser);
+    // Make an API call to update user details in the database
+    setIsModalOpen(false); // This should close the modal
+    console.log("Modal State:", isModalOpen); // Check if the state updates
+  };
+  const handleClose = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
   return (
     <nav className="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
       <Link
@@ -51,7 +63,7 @@ export default function Navbar() {
       <button
         type="button"
         className="navbar-toggler me-4"
-        onClick={toggleNavbar} // Toggle state on button click
+        onClick={toggleNavbar}
         aria-controls="navbarCollapse" // For accessibility
         aria-expanded={!isCollapsed} // Reflect the current state
         aria-label="Toggle navigation" // For accessibility
@@ -101,35 +113,79 @@ export default function Navbar() {
           <Link href="/contact" className="nav-item nav-link">
             Contact
           </Link>
-        </div>
 
-        {user ? (
-          <div
-            className="position-relative d-inline-block"
-            onMouseEnter={() => setIsAvatarHovered(true)}
-            onMouseLeave={() => setIsAvatarHovered(false)}
-          >
-            <Image
-              src={user.picture ?? "/img/avatar-user.svg"}
-              alt="User Avatar"
-              height={40}
-              width={40}
-              className="rounded-circle"
-              style={{ width: "40px", height: "40px" }} // Adjust size as needed
+          {user && (
+            <div
+              className="position-relative d-flex align-items-center me-7"
+              // onMouseEnter={() => setIsAvatarHovered(true)}
+              // onMouseLeave={() => setIsAvatarHovered(false)}
+              onClick={() => {
+                console.log("Avatar clicked");
+                setIsModalOpen(true);
+              }}
+            >
+              <Image
+                src={user.image ?? "/img/avatar-user.svg"}
+                alt="User Avatar"
+                height={40}
+                width={40}
+                className="rounded-circle"
+                style={{ width: "40px", height: "40px" }} // Adjust size as needed
+              />
+              {isAvatarHovered && (
+                <div
+                  className="dropdown-menu show"
+                  style={{ position: "absolute", top: "100%", right: 0 }}
+                >
+                  <div className="dropdown-item">Hello, {user.name}</div>
+                  <button className="dropdown-item" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {
+          isModalOpen && (
+            <UserUpdateModal
+              user={user}
+              onClose={handleClose}
+              onSubmit={handleUpdateUser}
             />
-            {isAvatarHovered && (
-              <div
-                className="dropdown-menu show"
-                style={{ position: "absolute", top: "100%", right: 0 }}
-              >
-                <div className="dropdown-item">Hello, {user.name}</div>
-                <button className="dropdown-item" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
+          )
+          //  : (
+          //   <></>
+          // )
+        }
+        {!user && (
+          //  (
+          //   <div
+          //     className="position-relative d-inline-block"
+          //     onMouseEnter={() => setIsAvatarHovered(true)}
+          //     onMouseLeave={() => setIsAvatarHovered(false)}
+          //   >
+          //     <Image
+          //       src={user.image ?? "/img/avatar-user.svg"}
+          //       alt="User Avatar"
+          //       height={40}
+          //       width={40}
+          //       className="rounded-circle"
+          //       style={{ width: "40px", height: "40px" }} // Adjust size as needed
+          //     />
+          //     {isAvatarHovered && (
+          //       <div
+          //         className="dropdown-menu show"
+          //         style={{ position: "absolute", top: "100%", right: 0 }}
+          //       >
+          //         <div className="dropdown-item">Hello, {user.name}</div>
+          //         <button className="dropdown-item" onClick={handleLogout}>
+          //           Logout
+          //         </button>
+          //       </div>
+          //     )}
+          //   </div>
+          // ) : (
           <Link
             href="/login"
             className="btn btn-primary py-4 px-lg-5 d-none d-lg-block"

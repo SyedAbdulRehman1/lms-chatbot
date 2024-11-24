@@ -4,11 +4,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface UserState {
   user: any; // Adjust the type based on your user structure
   loading: boolean;
+  hasPassword: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   loading: true, // Set to true initially
+  hasPassword: false,
 };
 
 const userSlice = createSlice({
@@ -26,9 +28,16 @@ const userSlice = createSlice({
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
     },
+    setHasPassword(state, action: PayloadAction<boolean>) {
+      state.hasPassword = action.payload;
+    },
   },
 });
 
-export const { setLoggedInUserData, clearUserData, setLoading } =
-  userSlice.actions;
+export const {
+  setLoggedInUserData,
+  clearUserData,
+  setLoading,
+  setHasPassword,
+} = userSlice.actions;
 export default userSlice.reducer;

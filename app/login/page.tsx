@@ -108,6 +108,15 @@ export default function Login() {
       }
     },
   });
+  const { socialActions, loadingGoogle, loadingFacebook } = useAuth();
+
+  const handleGoogleLogin = () => {
+    socialActions("google");
+  };
+
+  const handleFacebookLogin = () => {
+    socialActions("facebook");
+  };
 
   return (
     <div className=" justify-center flex flex-1">
@@ -118,12 +127,29 @@ export default function Login() {
           <form onSubmit={signUpFormik.handleSubmit}>
             <h1>Create Account</h1>
             <div className={styles["social-icons"]}>
-              <a href="#" className={styles.icon}>
+              {/* <a href="#" className={styles.icon}>
                 <i className="fa-brands fa-google"></i>
               </a>
               <a href="#" className={styles.icon}>
                 <i className="fa-brands fa-facebook-f"></i>
-              </a>
+              </a> */}
+              <button
+                onClick={handleGoogleLogin}
+                disabled={loadingGoogle}
+                className={styles.icon}
+              >
+                <i className="fa-brands fa-google"></i>{" "}
+                {loadingGoogle ? "Loading..." : "Login with Google"}
+              </button>
+              <button
+                onClick={handleFacebookLogin}
+                disabled={loadingFacebook}
+                className={styles.icon}
+              >
+                <i className="fa-brands fa-facebook-f"></i>{" "}
+                {loadingFacebook ? "Loading..." : "Login with Facebook"}
+              </button>
+
               <a href="#" className={styles.icon}>
                 <i className="fa-brands fa-youtube"></i>
               </a>

@@ -25,6 +25,11 @@ export const authOptions: AuthOptions = {
           role: profile.role ?? "user",
         };
       },
+      authorization: {
+        params: {
+          scope: "openid email profile",
+        },
+      },
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
@@ -105,6 +110,11 @@ export const authOptions: AuthOptions = {
           return true;
         }
       }
+
+      console.log("User:", user);
+      console.log("Account:", account);
+      console.log("Profile:", profile);
+      user.role = "STUDENT"; // Replace with a valid enum value if needed
       return true; // Allow sign-ins for other providers
     },
     async session({ session, token, user }) {
