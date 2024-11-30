@@ -28,13 +28,14 @@ const formSchema = z.object({
 export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const isNest = process.env.NEXT_PUBLIC_API_BACKEND === "true";
   const [isEditing, setIsEditing] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  // const apiBaseUrl =
-  //   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+  // const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(
+    initialData?.imageUrl || null
+  ); // Set initial preview to existing image if available
   const toggleEdit = () => {
     setIsEditing((current) => !current);
     if (isEditing) {
-      setPreviewImage(null);
+      setPreviewImage(initialData?.imageUrl || null); // Reset to initial value when canceling
     }
   };
 
@@ -128,13 +129,21 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
               height={100}
               width={100}
               className="object-cover rounded-md"
-              // src={initialData.imageUrl}
               src={`${
-                previewImage || isNest
+                previewImage
+                  ? previewImage // Use preview image if available
+                  : isNest
                   ? process.env.NEXT_PUBLIC_API_BASE_URL_NEST +
-                    initialData.imageUrl
-                  : initialData.imageUrl
+                    initialData.imageUrl // Use backend URL if in NestJS environment
+                  : initialData.imageUrl // Fallback to the original image URL
               }?t=${Date.now()}`} // Append timestamp to URL
+
+              // src={`${
+              //   previewImage || isNest
+              //     ? process.env.NEXT_PUBLIC_API_BASE_URL_NEST +
+              //       initialData.imageUrl
+              //     : initialData.imageUrl
+              // }?t=${Date.now()}`} // Append timestamp to URL
             />
           </div>
         ))}

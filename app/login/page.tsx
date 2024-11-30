@@ -51,14 +51,13 @@ export default function Login() {
         .required("Password is required"),
     }),
     onSubmit: async (values) => {
-      // try {
       const response = await registerUser(values);
-      console.log(response, "respppp");
-      if (response.success) {
-        toast.success(response.message!);
+      if (response.status == 400) {
+        toast.error(response.response.data.message ?? response.response.data!);
+      } else if (response.status == "success") {
+        toast.success(response.message);
       } else {
-        console.error("Error:", response.message);
-        toast.error(response.message!);
+        toast.success(response);
       }
       // } catch (error) {
       // console.error("Error:", error);
@@ -72,16 +71,17 @@ export default function Login() {
       email: "",
       password: "",
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      password: Yup.string().required("Password is required"),
-    }),
+    // validationSchema: Yup.object({
+    //   email: Yup.string()
+    //     .email("Invalid email address")
+    //     .required("Email is required"),
+    //   password: Yup.string().required("Password is required"),
+    // }),
     onSubmit: async (values) => {
       try {
         const resp = await signin(values, (field: any, error: any) => {
-          signInFormik.setFieldError(field, error.message);
+          console.log(error, "errro");
+          toast.error(error.message);
         });
         if (resp?.accessToken) {
           let user = await DecodeToken(resp?.accessToken);
@@ -91,10 +91,14 @@ export default function Login() {
             path: "/",
           });
           localStorage.setItem("accessToken", resp.accessToken);
-          router.push("/chatbot");
+          toast.success("Login Successfully !!");
+          router.push("/dashboard");
+        }
+        if (resp?.status == 200) {
+          toast.success("Login Successfully !!");
         }
         if (resp && resp.error === "not_confirmed") {
-          alert("Please verify your email address before proceeding.");
+          toast.error("Please verify your email address before proceeding");
           router.push(
             `/verify-email?email=${encodeURIComponent(values.email)}`
           ); // Redirect with email as a query parameter
@@ -105,6 +109,15 @@ export default function Login() {
       }
     },
   });
+  const { socialActions, loadingGoogle, loadingFacebook } = useAuth();
+
+  const handleGoogleLogin = () => {
+    socialActions("google");
+  };
+
+  const handleFacebookLogin = () => {
+    socialActions("facebook");
+  };
 
   return (
     <div className=" justify-center flex flex-1">
@@ -115,15 +128,32 @@ export default function Login() {
           <form onSubmit={signUpFormik.handleSubmit}>
             <h1>Create Account</h1>
             <div className={styles["social-icons"]}>
-              <Link href="#" className={styles.icon}>
+              {/* <a href="#" className={styles.icon}>
                 <i className="fa-brands fa-google"></i>
               </Link>
               <Link href="#" className={styles.icon}>
                 <i className="fa-brands fa-facebook-f"></i>
-              </Link>
-              <Link href="#" className={styles.icon}>
+              </a> */}
+              <button
+                onClick={handleGoogleLogin}
+                disabled={loadingGoogle}
+                className={styles.icon}
+              >
+                <i className="fa-brands fa-google"></i>{" "}
+                {loadingGoogle ? "Loading..." : "Login with Google"}
+              </button>
+              <button
+                onClick={handleFacebookLogin}
+                disabled={loadingFacebook}
+                className={styles.icon}
+              >
+                <i className="fa-brands fa-facebook-f"></i>{" "}
+                {loadingFacebook ? "Loading..." : "Login with Facebook"}
+              </button>
+
+              <a href="#" className={styles.icon}>
                 <i className="fa-brands fa-youtube"></i>
-              </Link>
+              </a>
             </div>
             <span>or use your email for register</span>
             {/* <input type="text" placeholder="Full Name" /> */}

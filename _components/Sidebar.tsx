@@ -71,7 +71,9 @@ const Sidebar = () => {
       console.log(response, "3939399");
 
       if (response.status) {
-        dispatch(setUserChats(response.data || []));
+        // dispatch(setUserChats(response.data || []));
+
+        dispatch(setUserChats(response?.data?.data || []));
 
         // setUserChats(response.data);
       } else {
@@ -147,9 +149,10 @@ const Sidebar = () => {
           )}
 
           {!loading &&
-            userChats?.length !== 0 &&
+            userChats.length !== 0 &&
             userChats?.map((chat: any) => (
               <div
+                key={chat.id}
                 className={classNames(
                   "flex cursor-pointer items-center justify-between p-2 hover:bg-[#0369A1] hover:bg-opacity-25",
                   {

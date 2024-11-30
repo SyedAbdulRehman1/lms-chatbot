@@ -42,13 +42,14 @@ export const ChapterAccessForm = ({
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
+  const [isFree, setIsFree] = useState(!!initialData.isFree);
 
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      isFree: !!initialData.isFree,
+      isFree: isFree,
     },
   });
 
@@ -60,7 +61,9 @@ export const ChapterAccessForm = ({
         `${URL.UPDATE_COURSE + courseId + URL.CHAPTERS + chapterId}`,
         values
       );
+
       toast.success("Chapter updated");
+      setIsFree(values.isFree);
       toggleEdit();
       router.refresh();
     } catch {
@@ -90,7 +93,7 @@ export const ChapterAccessForm = ({
             !initialData.isFree && "text-slate-500 italic"
           )}
         >
-          {initialData.isFree ? (
+          {isFree ? (
             <>This chapter is free for preview.</>
           ) : (
             <>This chapter is not free.</>

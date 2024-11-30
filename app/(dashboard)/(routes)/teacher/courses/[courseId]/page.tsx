@@ -68,6 +68,7 @@ const CourseIdPage = (props: { params: Params }) => {
       const categoryOptions = await fetchCategories();
       setCourse(courseDetails);
       setCategories(categoryOptions);
+      console.log(courseDetails, "3939");
     };
 
     loadData();

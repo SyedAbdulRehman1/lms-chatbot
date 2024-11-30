@@ -7,7 +7,7 @@ export default function Contactnavbar() {
     <>
       <nav className="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <Link
-          href="index.html"
+          href="/"
           className="navbar-brand d-flex align-items-center px-4 px-lg-5"
         >
           <h2 className="m-0 text-primary">
@@ -27,33 +27,14 @@ export default function Contactnavbar() {
             <Link href="index.html" className="nav-item nav-link active">
               Home
             </Link>
-            <Link href="about.html" className="nav-item nav-link">
+            <Link href="/about" className="nav-item nav-link">
               About
             </Link>
-            <Link href="courses.html" className="nav-item nav-link">
+            <Link href="/search" className="nav-item nav-link">
               Courses
             </Link>
-            <div className="nav-item dropdown">
-              <Link
-                href="#"
-                className="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                Pages
-              </Link>
-              <div className="dropdown-menu fade-down m-0">
-                <Link href="team.html" className="dropdown-item">
-                  Our Team
-                </Link>
-                <Link href="testimonial.html" className="dropdown-item">
-                  Testimonial
-                </Link>
-                <Link href="404.html" className="dropdown-item">
-                  404 Page
-                </Link>
-              </div>
-            </div>
-            <Link href="contact.html" className="nav-item nav-link">
+
+            <Link href="/contact" className="nav-item nav-link">
               Contact
             </Link>
           </div>

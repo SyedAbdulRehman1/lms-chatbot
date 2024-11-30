@@ -1,5 +1,6 @@
 // import "../img/carousel-1.jpg"
 import Image from "next/image";
+import Link from "next/link";
 export default function AboutUs() {
   return (
     <>
@@ -81,9 +82,9 @@ export default function AboutUs() {
                   </p>
                 </div>
               </div>
-              <a className="btn btn-primary py-3 px-5 mt-2" href="#">
+              <Link className="btn btn-primary py-3 px-5 mt-2" href="/about">
                 Read More
-              </a>
+              </Link>
             </div>
           </div>
         </div>

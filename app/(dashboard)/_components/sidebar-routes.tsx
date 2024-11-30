@@ -9,7 +9,7 @@ const guestRoutes = [
   {
     icon: Layout,
     label: "Dashboard",
-    href: "/",
+    href: "/dashboard",
   },
   {
     icon: Compass,
@@ -29,7 +29,7 @@ const teacherRoutes = [
     label: "Analytics",
     href: "/teacher/analytics",
   },
-]
+];
 
 export const SidebarRoutes = () => {
   const pathname = usePathname();
@@ -49,5 +49,5 @@ export const SidebarRoutes = () => {
         />
       ))}
     </div>
-  )
-}
+  );
+};

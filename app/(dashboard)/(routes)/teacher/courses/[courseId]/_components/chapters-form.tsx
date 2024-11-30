@@ -41,6 +41,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const userId = loggedInUserData?.id;
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [chapters, setChapters] = useState(initialData.chapters); // Maintain chapters in state
 
   const toggleCreating = () => {
     setIsCreating((current) => !current);
@@ -61,13 +62,15 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       console.log(courseId, "courr");
-      await Axios.post(
+      const response = await Axios.post(
         `${URL.CREATE_COURSE + courseId + URL.CHAPTERS}`,
         values
       );
+      console.log(response, "9393939");
       toast.success("Chapter created");
+      setChapters((prevChapters) => [...prevChapters, response.data]);
       toggleCreating();
-      router.refresh();
+      // router.refresh();
     } catch {
       toast.error("Something went wrong");
     }
@@ -84,6 +87,21 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
         }
       );
       toast.success("Chapters reordered");
+      setChapters(
+        updateData.map((item: any) => {
+          const chapter = initialData.chapters.find(
+            (chapter) => chapter.id === item.id
+          );
+          if (chapter) {
+            return {
+              ...chapter, // Keep existing properties
+              position: item.position, // Update position
+            };
+          }
+          return item; // fallback if no matching chapter found
+        })
+      );
+
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -151,11 +169,13 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
             !initialData.chapters.length && "text-slate-500 italic"
           )}
         >
-          {!initialData.chapters.length && "No chapters"}
+          {/* {!initialData.chapters.length && "No chapters"} */}
+          {!chapters.length && "No chapters"}
           <ChaptersList
             onEdit={onEdit}
             onReorder={onReorder}
-            items={initialData.chapters || []}
+            // items={initialData.chapters || []}
+            items={chapters}
           />
         </div>
       )}

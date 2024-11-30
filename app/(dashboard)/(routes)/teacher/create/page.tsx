@@ -71,13 +71,32 @@ const CreatePage = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-8">
           <div>
             <label htmlFor="title">Course title</label>
-            <input
+            {/* <input
               id="title"
               disabled={isSubmitting}
               placeholder="e.g. 'Advanced web development'"
               {...form.register("title")}
               className="input"
-            />
+            /> */}
+            <div className="input-container">
+              <input
+                type="text"
+                id="first_name"
+                className="bg-gray-50 border rounded-2xl ms-4 mb-4 input focus:outline-none focus:border-none border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="e.g. 'Advanced web development'"
+                {...form.register("title")}
+                required
+              />
+
+              {/* <input
+                id="title"
+                disabled={isSubmitting}
+                placeholder="e.g. 'Advanced web development'"
+                className=" input-new"
+                {...form.register("title")}
+              /> */}
+            </div>
+
             <p className="form-description">
               What will you teach in this course?
             </p>
@@ -92,7 +111,7 @@ const CreatePage = () => {
             <button
               type="submit"
               disabled={!isValid || isSubmitting}
-              className="btn"
+              className="btn-animation"
             >
               Continue
             </button>

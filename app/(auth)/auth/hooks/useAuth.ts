@@ -13,6 +13,7 @@ import { ApiResponse } from "@/app/Interface/ApiResponse";
 import { URL } from "@/app/constants/apiEndpoints";
 import Axios from "@/app/utils/axiosInstance";
 import { DecodeToken } from "@/app/utils/decodeToken";
+import AxiosLogin from "@/app/utils/axiosInstanceLogin";
 // import { useDispatch } from "react-redux";
 // import { setLoggedInUserData } from "@/app/store/userSlice";
 // import { encodeToken } from '@/app/utils/jwtService';
@@ -84,7 +85,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
   const register = async (data: FieldValues) => {
     setLoading(true);
     try {
-      const res = await Axios.post(URL.REGISTER_USER, data);
+      const res = await AxiosLogin.post(URL.REGISTER_USER, data);
       setLoading(false);
       console.log(res, "resssssssssss");
       return res.data;
@@ -97,7 +98,9 @@ export const useAuth = (errorCb?: ErrorCb) => {
       // console.log(res, "resssssssssss");
       // return res;
     } catch (error) {
+      console.log(error, "err");
       setLoading(false);
+      return error;
       throw error;
     }
   };
@@ -159,7 +162,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
     try {
       let result;
       if (isNest) {
-        const loginResponse = await Axios.post(URL.LOGIN_USER, data);
+        const loginResponse = await AxiosLogin.post(URL.LOGIN_USER, data);
         console.log(loginResponse, "result from NestJS login");
         if (loginResponse.data?.accessToken) {
           let user = await DecodeToken(loginResponse.data?.accessToken);
@@ -187,6 +190,12 @@ export const useAuth = (errorCb?: ErrorCb) => {
                 message: "The provided credentials do not match our records.",
               });
               break;
+            case "invalid_password": // Add case for password error
+              message.error("The password you entered is incorrect.");
+              errorCb("password", {
+                message: "The password you entered is incorrect.",
+              });
+              break;
             case "user_not_found":
               message.error("User not found. Please check your email.");
               errorCb("email", {
@@ -206,6 +215,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
               errorCb("generic", { message: "An unexpected error occurred." });
               break;
           }
+          return result;
         } else if (result?.ok) {
           const session = await getSession();
           if (session) {
@@ -215,7 +225,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
               await dispatch(setLoggedInUserData(user));
               message.success("Login successful!");
             }
-            // router.push("/chatbot");
+            router.push("/dashboard");
           }
         }
         return result;

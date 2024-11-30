@@ -4,12 +4,12 @@ const { withUt } = require("uploadthing/tw");
 module.exports = withUt({
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
     "./_components/**/*.{js,ts,jsx,tsx,mdx}",
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -55,7 +55,7 @@ module.exports = withUt({
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
+        // lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },

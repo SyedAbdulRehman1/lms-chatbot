@@ -1,11 +1,12 @@
 "use client"; // Ensure this component is rendered on the client side
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"; // Import useSelector to access Redux store
 import { signOut } from "next-auth/react"; // Import signOut from next-auth
 import { RootState } from "@/app/store/store";
 import { clearUserData } from "@/app/store/userSlice";
 import Link from "next/link";
 import Image from "next/image";
+import UserUpdateModal from "./UserUpdateModal";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // State to handle avatar hover
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch user data from Redux store
   // const user = useSelector((state) => state); // Adjust the state path as needed
@@ -38,20 +40,30 @@ export default function Navbar() {
     // signOut({ callbackUrl: "/" }); // Redirect to home or login page after logout
   };
 
+  const handleUpdateUser = (updatedUser: any) => {
+    console.log("User updated:", updatedUser);
+    // Make an API call to update user details in the database
+    setIsModalOpen(false); // This should close the modal
+    console.log("Modal State:", isModalOpen); // Check if the state updates
+  };
+  const handleClose = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
   return (
     <nav className="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-      <a
-        href="index.html"
+      <Link
+        href="/"
         className="navbar-brand d-flex align-items-center px-4 px-lg-5"
       >
         <h2 className="m-0 text-primary">
           <i className="fa fa-book me-3"></i>LMS
         </h2>
-      </a>
+      </Link>
       <button
         type="button"
         className="navbar-toggler me-4"
-        onClick={toggleNavbar} // Toggle state on button click
+        onClick={toggleNavbar}
         aria-controls="navbarCollapse" // For accessibility
         aria-expanded={!isCollapsed} // Reflect the current state
         aria-label="Toggle navigation" // For accessibility
@@ -63,16 +75,18 @@ export default function Navbar() {
         id="navbarCollapse"
       >
         <div className="navbar-nav ms-auto p-4 p-lg-0">
-          <Link href="index.html" className="nav-item nav-link active">
+          {/* <Link href="/" className="nav-item nav-link active">
             Home
-          </Link>
+          </Link> */}
           <Link href="/about" className="nav-item nav-link">
             About
           </Link>
-          <Link href="courses.html" className="nav-item nav-link">
-            Courses
-          </Link>
-          <div className="nav-item dropdown">
+          {user && (
+            <Link href="/search" className="nav-item nav-link">
+              Courses
+            </Link>
+          )}
+          {/* <div className="nav-item dropdown">
             <Link
               href="#"
               className="nav-link dropdown-toggle"
@@ -95,39 +109,83 @@ export default function Navbar() {
                 404 Page
               </Link>
             </div>
-          </div>
-          <Link href="contact.html" className="nav-item nav-link">
+          </div> */}
+          <Link href="/contact" className="nav-item nav-link">
             Contact
           </Link>
-        </div>
 
-        {user ? (
-          <div
-            className="position-relative d-inline-block"
-            onMouseEnter={() => setIsAvatarHovered(true)}
-            onMouseLeave={() => setIsAvatarHovered(false)}
-          >
-            <Image
-              src={user.picture ?? "/img/avatar-user.svg"}
-              alt="User Avatar"
-              height={40}
-              width={40}
-              className="rounded-circle"
-              style={{ width: "40px", height: "40px" }} // Adjust size as needed
+          {user && (
+            <div
+              className="position-relative d-flex align-items-center me-7"
+              // onMouseEnter={() => setIsAvatarHovered(true)}
+              // onMouseLeave={() => setIsAvatarHovered(false)}
+              onClick={() => {
+                console.log("Avatar clicked");
+                setIsModalOpen(true);
+              }}
+            >
+              <Image
+                src={user.image ?? "/img/avatar-user.svg"}
+                alt="User Avatar"
+                height={40}
+                width={40}
+                className="rounded-circle"
+                style={{ width: "40px", height: "40px" }} // Adjust size as needed
+              />
+              {isAvatarHovered && (
+                <div
+                  className="dropdown-menu show"
+                  style={{ position: "absolute", top: "100%", right: 0 }}
+                >
+                  <div className="dropdown-item">Hello, {user.name}</div>
+                  <button className="dropdown-item" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {
+          isModalOpen && (
+            <UserUpdateModal
+              user={user}
+              onClose={handleClose}
+              onSubmit={handleUpdateUser}
             />
-            {isAvatarHovered && (
-              <div
-                className="dropdown-menu show"
-                style={{ position: "absolute", top: "100%", right: 0 }}
-              >
-                <div className="dropdown-item">Hello, {user.name}</div>
-                <button className="dropdown-item" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
+          )
+          //  : (
+          //   <></>
+          // )
+        }
+        {!user && (
+          //  (
+          //   <div
+          //     className="position-relative d-inline-block"
+          //     onMouseEnter={() => setIsAvatarHovered(true)}
+          //     onMouseLeave={() => setIsAvatarHovered(false)}
+          //   >
+          //     <Image
+          //       src={user.image ?? "/img/avatar-user.svg"}
+          //       alt="User Avatar"
+          //       height={40}
+          //       width={40}
+          //       className="rounded-circle"
+          //       style={{ width: "40px", height: "40px" }} // Adjust size as needed
+          //     />
+          //     {isAvatarHovered && (
+          //       <div
+          //         className="dropdown-menu show"
+          //         style={{ position: "absolute", top: "100%", right: 0 }}
+          //       >
+          //         <div className="dropdown-item">Hello, {user.name}</div>
+          //         <button className="dropdown-item" onClick={handleLogout}>
+          //           Logout
+          //         </button>
+          //       </div>
+          //     )}
+          //   </div>
+          // ) : (
           <Link
             href="/login"
             className="btn btn-primary py-4 px-lg-5 d-none d-lg-block"

@@ -82,7 +82,7 @@ export default function Team() {
                 <h5 className="mb-0">Hafiz Syed Abdulrehman</h5>
                 <small>BSCS-F20-379</small>
                 <br></br>
-                <small>Jr. Developer IT Tower</small>
+                <small>Software Engineer</small>
               </div>
             </div>
           </div>

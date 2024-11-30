@@ -41,6 +41,9 @@ export const ChapterDescriptionForm = ({
   chapterId,
 }: ChapterDescriptionFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [description, setDescription] = useState(
+    initialData?.description || ""
+  ); // Local state for description
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -49,7 +52,8 @@ export const ChapterDescriptionForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description || "",
+      // description: initialData?.description || "",
+      description: description, // Use local state for default value
     },
   });
 
@@ -62,6 +66,7 @@ export const ChapterDescriptionForm = ({
         values
       );
       toast.success("Chapter updated");
+      setDescription(values.description);
       toggleEdit();
       router.refresh();
     } catch {
@@ -88,13 +93,11 @@ export const ChapterDescriptionForm = ({
         <div
           className={cn(
             "text-sm mt-2",
-            !initialData.description && "text-slate-500 italic"
+            !description && "text-slate-500 italic"
           )}
         >
-          {!initialData.description && "No description"}
-          {initialData.description && (
-            <Preview value={initialData.description} />
-          )}
+          {!description && "No description"}
+          {description && <Preview value={description} />}
         </div>
       )}
       {isEditing && (
