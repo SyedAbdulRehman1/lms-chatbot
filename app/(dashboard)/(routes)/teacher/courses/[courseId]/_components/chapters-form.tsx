@@ -166,11 +166,11 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
         <div
           className={cn(
             "text-sm mt-2",
-            !initialData.chapters.length && "text-slate-500 italic"
+            !initialData?.chapters?.length && "text-slate-500 italic"
           )}
         >
           {/* {!initialData.chapters.length && "No chapters"} */}
-          {!chapters.length && "No chapters"}
+          {!chapters?.length && "No chapters"}
           <ChaptersList
             onEdit={onEdit}
             onReorder={onReorder}
