@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { DecodeToken } from "../utils/decodeToken";
+import Link from "next/link";
 // import { useAuth } from "./hooks/useAuth";
 // import Header from '../../components/Header';
 
@@ -129,8 +130,8 @@ export default function Login() {
             <div className={styles["social-icons"]}>
               {/* <a href="#" className={styles.icon}>
                 <i className="fa-brands fa-google"></i>
-              </a>
-              <a href="#" className={styles.icon}>
+              </Link>
+              <Link href="#" className={styles.icon}>
                 <i className="fa-brands fa-facebook-f"></i>
               </a> */}
               <button
@@ -231,15 +232,15 @@ export default function Login() {
           <form onSubmit={signInFormik.handleSubmit}>
             <h1>Sign In</h1>
             <div className={styles["social-icons"]}>
-              <a href="#" className={` ${styles.icon}`}>
+              <Link href="#" className={` ${styles.icon}`}>
                 <i className="fa-brands fa-google"></i>
-              </a>
-              <a href="#" className={styles.icon}>
+              </Link>
+              <Link href="#" className={styles.icon}>
                 <i className="fa-brands fa-facebook-f"></i>
-              </a>
-              <a href="#" className={styles.icon}>
+              </Link>
+              <Link href="#" className={styles.icon}>
                 <i className="fa-brands fa-youtube"></i>
-              </a>
+              </Link>
             </div>
             <span>or use your email and password</span>
             <input
@@ -289,7 +290,7 @@ export default function Login() {
                 {signInFormik.errors.password}
               </div>
             ) : null}
-            <a href="#">Forgot Password?</a>
+            <Link href="#">Forgot Password?</Link>
             <button className="login-submit-button" type="submit">
               Login
             </button>
@@ -310,10 +311,9 @@ export default function Login() {
             <div
               className={`${styles["toggle-panel"]} ${styles["toggle-right"]}`}
             >
-              <h1>Hello, Subscriber!</h1>
-              <p>
-                Register with your personal details to use all of site features.
-              </p>
+              <h1 style={{ color: "white" }}>Enter your credentials</h1>
+
+              <p>Explore the Magical Treasure of Knowledge</p>
               <button onClick={handleSignUp}>Register</button>
             </div>
           </div>
