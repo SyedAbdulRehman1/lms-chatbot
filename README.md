@@ -1,4 +1,4 @@
-# Build an LMS Platform: Next.js 13,  React, Stripe, Mux, Prisma, Tailwind, MySQL | Full Course 2023
+# LMS Platform: Next.js 15,  React, Stripe, Mux, Prisma, Tailwind, MySQL, MONGODB,TYPESCRIPT
 
 
 Key Features:
@@ -24,7 +24,7 @@ Key Features:
 
 ### Prerequisites
 
-**Node version 18.x.x**
+**Node version 22.x.x**
 
 ### Cloning the repository
 
