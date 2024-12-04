@@ -1,4 +1,4 @@
-# LMS Platform: Next.js 15,  React, Stripe, Mux, Prisma, Tailwind, MySQL, MONGODB,TYPESCRIPT
+# LMS Platform: Next.js 15,  React, Stripe, Mux, Prisma, Tailwind, MySQL, MONGODB, TypeScript
 
 
 Key Features:
