@@ -15,7 +15,8 @@ export const URL = {
   CATEGORIES_AND_COURSES: isNest
     ? "categories-and-courses"
     : "/api/categories-and-courses",
-  LOGIN_USER: "/auth/login",
+  LOGIN_USER: "/login",
+  // LOGIN_USER: "/auth/login",
   COURSE_UNIQUE: isNest ? "/courses/courseUnique/" : "/api/courseUnique/",
   COURSE_WITH_PROGRESS: isNest
     ? "/courses/course-with-progress/"

@@ -11,6 +11,7 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
+import Axios from "@/app/utils/axiosInstance";
 
 interface AttachmentFormProps {
   initialData: Course & { attachments: Attachment[] };
@@ -34,7 +35,8 @@ export const AttachmentForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post(`/api/courses/${courseId}/attachments`, values);
+      console.log("dfdf");
+      await Axios.post(`/api/courses/${courseId}/attachments`, values);
       toast.success("Course updated");
       toggleEdit();
       router.refresh();

@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import { DecodeToken } from "@/app/utils/decodeToken";
 import AxiosLogin from "@/app/utils/axiosInstanceLogin";
 import { URL } from "@/app/constants/apiEndpoints";
+import Axios from "@/app/utils/axiosInstance";
 
 export default function FetchUserData() {
   const dispatch = useDispatch();
@@ -34,9 +35,7 @@ export default function FetchUserData() {
           updatedUser.hasPassword = false; // Now we can modify this object
 
           // decodedUser.hasPassword = false;
-          const response = await AxiosLogin.get(
-            `${URL.GET_USER + updatedUser.id}`
-          );
+          const response = await Axios.get(`${URL.GET_USER + updatedUser.id}`);
 
           const data = await response.data;
           console.log(data, "datata");
