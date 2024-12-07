@@ -1,11 +1,5 @@
-# Build an LMS Platform: Next.js 13,  React, Stripe, Mux, Prisma, Tailwind, MySQL | Full Course 2023
+# LMS Platform: Next.js 15,  React, Stripe, Mux, Prisma, Tailwind, MySQL, MONGODB, TypeScript
 
-![Copy of Copy of Copy of Copy of Fullstack Twitter Clone (9)](https://github.com/AntonioErdeljac/next13-lms-platform/assets/23248726/fa077fca-bb74-419a-84de-54ac103bb026)
-
-
-This is a repository for Build an LMS Platform: Next.js 13,  React, Stripe, Mux, Prisma, Tailwind, MySQL | Full Course 2023
-
-[VIDEO TUTORIAL](https://www.youtube.com/watch?v=Big_aFLmekI)
 
 Key Features:
 
@@ -24,16 +18,18 @@ Key Features:
 - Rich text editor for chapter description
 - Authentication using Clerk
 - ORM using Prisma
-- MySQL database using Planetscale
+- MySQL database
+- Mongodb database
+- Prisma
 
 ### Prerequisites
 
-**Node version 18.x.x**
+**Node version 22.x.x**
 
 ### Cloning the repository
 
 ```shell
-git clone https://github.com/AntonioErdeljac/next13-lms-platform.git
+git clone https://github.com/SyedAbdulRehman1/lms-chatbot.git
 ```
 
 ### Install packages
@@ -44,29 +40,6 @@ npm i
 
 ### Setup .env file
 
-
-```js
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=
-
-DATABASE_URL=
-
-UPLOADTHING_SECRET=
-UPLOADTHING_APP_ID=
-
-MUX_TOKEN_ID=
-MUX_TOKEN_SECRET=
-
-STRIPE_API_KEY=
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-STRIPE_WEBHOOK_SECRET=
-
-NEXT_PUBLIC_TEACHER_ID=
-```
 
 ### Setup Prisma
 
