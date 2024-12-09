@@ -8,6 +8,7 @@ export const URL = {
   GET_COURSES: isNest ? "/courses" : "/api/courses/",
   UPDATE_COURSE: isNest ? "/courses/" : "/api/courses/",
   GET_CHAPTER: isNest ? "/chapters/" : "/api/courses/",
+  DELETE_COURSE: isNest ? "/courses/" : "/api/courses/",
   UPLOAD: "/upload",
   PUBLISH: "/publish",
   UN_PUBLISH: "/unpublish",
