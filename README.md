@@ -43,7 +43,7 @@ npm i
 
 ### Setup Prisma
 
-Add MySQL Database (I used PlanetScale)
+Add MySQL Database
 
 ```shell
 npx prisma generate
