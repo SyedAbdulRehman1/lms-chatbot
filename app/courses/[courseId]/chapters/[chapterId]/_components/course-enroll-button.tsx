@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
+import Axios from "@/app/utils/axiosInstance";
+import { URL } from "@/app/constants/apiEndpoints";
 
 interface CourseEnrollButtonProps {
   price: number;
@@ -22,7 +24,9 @@ export const CourseEnrollButton = ({
     try {
       setIsLoading(true);
 
-      const response = await axios.post(`/api/courses/${courseId}/checkout`)
+      const response = await Axios.post(
+        `${URL.UPDATE_COURSE + courseId}/checkout`
+      );
 
       window.location.assign(response.data.url);
     } catch {
@@ -30,7 +34,7 @@ export const CourseEnrollButton = ({
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Button
@@ -41,5 +45,5 @@ export const CourseEnrollButton = ({
     >
       Enroll for {formatPrice(price)}
     </Button>
-  )
-}
+  );
+};

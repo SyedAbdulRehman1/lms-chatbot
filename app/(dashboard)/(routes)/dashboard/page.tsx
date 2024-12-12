@@ -44,8 +44,10 @@ export default function Dashboard() {
   const fetchCourses = async () => {
     try {
       if (loggedInUserData) {
+        // const isNest = process.env.
         const { completedCourses, coursesInProgress } =
           await getDashboardCourses(loggedInUserData.id);
+        // console.log()
         setCourses({ completedCourses, coursesInProgress });
       }
     } catch (error) {
