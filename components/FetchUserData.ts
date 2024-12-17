@@ -39,7 +39,7 @@ export default function FetchUserData() {
 
           const data = await response.data;
           console.log(data, "datata");
-          dispatch(setHasPassword(data.hasPassword));
+          dispatch(setHasPassword(data.data.hasPassword));
           dispatch(setLoggedInUserData(updatedUser));
           const updatedUser1 = Object.isFrozen(data)
             ? JSON.parse(JSON.stringify(data)) // Create a deep copy

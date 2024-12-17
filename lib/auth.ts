@@ -19,6 +19,7 @@ export const getUserDataFromLocalStorage = () => {
     try {
       const user = localStorage.getItem("user");
       if (user) {
+        console.log(user, "user from localstroge User");
         return JSON.parse(user);
       }
 
